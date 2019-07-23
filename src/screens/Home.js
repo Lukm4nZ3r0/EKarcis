@@ -15,7 +15,8 @@ import axios from 'axios';
 
 const HEIGHT = Dimensions.get('window').height;
 
-export default class Home extends Component {
+
+class Home extends Component {
 
     static navigationOptions = () => ({
         header: null
@@ -110,6 +111,7 @@ export default class Home extends Component {
     componentDidMount() {
         axios.get('http://52.27.82.154:7000/tour')
         .then((response) => {
+            console.log(response)
             this.setState((prevState) => {
                 return {
                     tour: response.data.data
@@ -158,3 +160,5 @@ export default class Home extends Component {
         )
     }
 }
+
+export default Home

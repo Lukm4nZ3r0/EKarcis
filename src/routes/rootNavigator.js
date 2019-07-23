@@ -8,6 +8,12 @@ import TimeLine from '../screens/TimeLine';
 import AddTour from '../screens/AddTour';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Detail from '../screens/Detail';
+import Login from '../screens/Login'
+import Register from '../screens/Register'
+import ForgotPassword from '../screens/ForgotPassword'
+import MyProfileScreen from '../screens/MyProfileScreen'
+import MyEditProfileScreen from '../screens/MyEditProfileScreen'
+import Chat from '../screens/Chat'
 
 const bottomTabNavigator = createBottomTabNavigator({
     Home: {
@@ -23,8 +29,8 @@ const bottomTabNavigator = createBottomTabNavigator({
         screen: Notification
     },
     User: {
-        screen: User
-    }
+        screen: MyProfileScreen
+    },
 },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -63,7 +69,13 @@ const appStackNavigator = createStackNavigator({
         navigationOptions: () => ({
             header: null,
         }),
-    }
+    },
+    Login: {screen:Login},
+    Register,
+    MyEditProfileScreen,
+    MyProfileScreen,
+    ForgotPassword,
+    Chat,
 })
 
 export default createAppContainer(appStackNavigator);

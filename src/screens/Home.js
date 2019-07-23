@@ -5,108 +5,144 @@ import {
     Dimensions, 
     Image, 
     FlatList, 
-    TouchableOpacity 
+    TouchableOpacity,
+    ImageBackground
 } from 'react-native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Carousel from 'react-native-snap-carousel';
+import axios from 'axios';
 
 const HEIGHT = Dimensions.get('window').height;
 
 export default class Home extends Component {
 
-    static navigationOptions = () => {
+    constructor(props) {
+        super(props);
 
-        return {
-            header: null
+        this.state = {
+            carouselItems: [
+                {
+                    title:"Item 1",
+                    image: 'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    price: '20.000'
+                },
+                {
+                    title:"Item 2",
+                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    price: '20.000'
+                },
+                {
+                    title:"Item 3",
+                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    price: '20.000'
+                },
+                {
+                    title:"Item 4",
+                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    price: '20.000'
+                },
+                {
+                    title:"Item 5",
+                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    price: '200.000'
+                }
+            ],
+            tour: []
         }
     }
 
     _renderItem = ({ item }) => {
         return (
-            <TouchableOpacity style={{ flex: 1, backgroundColor: '#fff', borderRadius: 8, marginBottom:10, elevation:5 }}>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: '#fff', borderRadius: 8, marginBottom:10, elevation:5 }} onPress={() => {this.props.navigation.navigate('DetailTour', {item})}}>
                 <View style={{ flexDirection: 'row' }}>
-                    <View style={{ paddingHorizontal: 5, paddingVertical: 5 }}>
-                        <Image source={{ uri: item.image }} style={{ width: 110, height: 110, borderRadius: 8 }} />
+                    <View style={{ paddingHorizontal: 5, paddingVertical: 5, justifyContent:'center' }}>
+                        <Image source={{ uri: item.photo }} style={{ width: 110, height: 110, borderRadius: 8 }} />
                     </View>
                     <View style={{ padding: 5, flex: 1 }}>
-                        <Text style={{ fontSize: 22, fontFamily: 'sans-serif-medium', color: '#282833' }}>{item.name}</Text>
-                        <Text numberOfLines={2}>{item.description}</Text>
-                        <EvilIcon name='location' />
+                        <View style={{flexDirection:'row'}}>
+                            <Text style={{backgroundColor:'#66c00c', color:'#fff', borderRadius:5, paddingHorizontal:5, fontSize:12, marginRight:5}}>{item.name_category}</Text>
+                        </View>
+                        <View style={{flex:1}}>
+                            <Text numberOfLines={1} style={{ fontSize: 20, fontFamily: 'sans-serif-medium', color: '#282833' }}>{item.tour}</Text>
+                            <Text>Rp. {item.cost}</Text>
+                        </View>
+                        <View style={{flex:1}}>
+                            <Text numberOfLines={2} style={{fontSize:12}}>{item.description}</Text>
+                        </View>
+                        <View style={{flex:1, flexDirection:'row', marginTop:5}}>
+                            <View style={{flex:2.6, justifyContent:'center'}}>
+                                <View style={{flexDirection:'row', alignItems:'center'}}>
+                                    <EvilIcon name='location' size={18} />
+                                    <Text style={{fontSize:13}}>{item.province}</Text>
+                                </View>
+                            </View>
+                            <View style={{flex:1, justifyContent:'center'}}>
+                                <View style={{flexDirection:'row', alignItems:'center'}}>
+                                    <Entypo name='ticket' color={'green'} size={16} />
+                                    <Text style={{fontSize:12, marginLeft:3}}>{item.ticketAmount}</Text>
+                                </View>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
         )
     }
 
+    _renderCarousel({item,index}){
+        return (
+            <TouchableOpacity>
+                <ImageBackground style={{flex:1, justifyContent:'flex-end', width:300, marginRight:20, elevation:5}} source={{uri:item.image}}>
+                    <View style={{padding:10}}>
+                        <Text style={{color:'#fff', fontSize:20}}>{item.title}</Text>
+                        <Text style={{color:'#fff'}}>Rp. {item.price}</Text>
+                    </View>
+                </ImageBackground>
+            </TouchableOpacity>
+        )
+    }
+
+    componentDidMount() {
+        axios.get('http://52.27.82.154:7000/tour')
+        .then((response) => {
+            this.setState((prevState) => {
+                return {
+                    tour: response.data.data
+                }
+            })
+        })
+    }
+
     render() {
-
-        const data = [
-            {
-                id: '1',
-                name: 'Nama Tempat',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                image: 'http://www.paketwisatajogja.biz/wp-content/uploads/2017/11/Pantai-Pulau-Kalong.jpg',
-                price: '20.000',
-                ticketAmount: '200/200',
-                category: 'Nature',
-                lat: '',
-                lng: ''
-            },
-            {
-                id: '2',
-                name: 'Nama Tempat',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                image: 'https://cdn-image.hipwee.com/wp-content/uploads/2018/01/hipwee-Pesona-Pantai-Gesing.jpg',
-                price: '20.000',
-                category: 'Nature',
-                ticketAmount: '200/200',
-                lat: '',
-                lng: ''
-            },
-            {
-                id: '3',
-                name: 'Nama Tempat',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                image: 'https://cdn-image.hipwee.com/wp-content/uploads/2018/01/hipwee-20170221040347-750x563.jpeg',
-                price: '20.000',
-                category: 'Nature',
-                ticketAmount: '200/200',
-                lat: '',
-                lng: ''
-            },
-            {
-                id: '4',
-                name: 'Nama Tempat',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                image: 'https://cdn-image.hipwee.com/wp-content/uploads/2018/01/hipwee-pinus-pengger-foto-dari-@kangnuriel-758x505-750x500.jpg',
-                price: '20.000',
-                category: 'Nature',
-                ticketAmount: '200/200',
-                lat: '',
-                lng: ''
-            },
-            {
-                id: '5',
-                name: 'Nama Tempat',
-                description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                image: 'https://cdn-image.hipwee.com/wp-content/uploads/2018/01/hipwee-Air-Terjun-Kedung-Kandang-By-oddzhaheho-740x493.jpg',
-                price: '20.000',
-                category: 'Nature',
-                ticketAmount: '200/200',
-                lat: '',
-                lng: ''
-            }
-        ]
-
         return (
             <Fragment>
-                <View style={{ flex: 1, backgroundColor: '#f1f1f1', marginTop: 60, paddingHorizontal: 7, paddingVertical: 20 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <FlatList 
-                        data={data}
+                <View style={{ flex: 1, backgroundColor: '#fff', marginTop: 60, paddingHorizontal: 7, paddingTop:10, paddingBottom:10 }}>
+                    {/* <View style={{ flexDirection: 'row'}}>
+                    </View> */}
+                    {/* <Carousel
+                        data={this.state.carouselItems}
+                        sliderWidth={400}
+                        itemWidth={300}
+                        renderItem={this._renderCarousel}
+                        layout={'default'}
+                    /> */}
+                    <View style={{backgroundColor:'#fff', marginBottom:10}}>
+                        <Text style={{fontFamily:'sans-serif', fontSize:18, color:'#282833'}}>Recomended for you</Text>
+                    </View>
+                    <FlatList 
+                        data={this.state.carouselItems}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={this._renderCarousel} />
+
+                    <FlatList 
+                        data={this.state.tour}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={this._renderItem} />
-                    </View>
+                        renderItem={this._renderItem}
+                        style={{marginTop:20}} />
                 </View>
 
                 <View style={{ backgroundColor: '#fff', elevation: 5, position: 'absolute', top: 0, right: 0, left: 0 }}>

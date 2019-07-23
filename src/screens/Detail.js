@@ -1,18 +1,21 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions, StyleSheet } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
+import MapView, {Marker} from 'react-native-maps';
+
+const { height, width } = Dimensions.get('window');
 
 class Overview extends Component {
     render() {
         return (
             <ScrollView style={{ paddingHorizontal: 20, paddingTop: 10 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Ionicon name='ios-timer' size={24} color={'#66c00c'} />
+                <View style={{ flexDirection: 'row', alignItems:'center' }}>
+                    <Ionicon name='ios-timer' size={20} color={'#66c00c'} />
                     <Text style={{ fontSize: 18, marginLeft: 10, fontFamily: 'sans-serif-medium', color: '#282833' }}>8 hours</Text>
                 </View>
-                <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                    <EvilIcon name='location' size={26} color={'#66c00c'} style={{ marginLeft: -4 }} />
+                <View style={{ flexDirection: 'row', marginTop: 10, alignItems:'center' }}>
+                    <EvilIcon name='location' size={22} color={'#66c00c'} style={{ marginLeft: -4 }} />
                     <Text style={{ fontSize: 18, marginLeft: 6, fontFamily: 'sans-serif-medium', color: '#282833' }}>{this.props.navigation.state.params.item.province}</Text>
                 </View>
                 <View style={{ flex: 1, marginTop: 8, marginBottom: 100 }}>
@@ -69,54 +72,69 @@ export default class Detail extends Component {
             )
         } else if(key == 1) {
             return (
-                <ScrollView style={{ paddingHorizontal: 20, paddingTop: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Ionicon name='ios-timer' size={24} color={'#66c00c'} />
-                        <Text style={{ fontSize: 18, marginLeft: 10, fontFamily: 'sans-serif-medium', color: '#282833' }}>8 hours</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                        <EvilIcon name='location' size={26} color={'#66c00c'} style={{ marginLeft: -4 }} />
-                        <Text style={{ fontSize: 18, marginLeft: 6, fontFamily: 'sans-serif-medium', color: '#282833' }}>{this.props.navigation.state.params.item.location}</Text>
-                    </View>
-                    <View style={{ flex: 1, marginTop: 8, marginBottom: 100 }}>
-                        <Text style={{ fontSize: 15 }}>
-                            Tes
-                        </Text>
-                    </View>
-                </ScrollView>
+                <View style={{ paddingHorizontal: 20, paddingTop: 10 }}>
+                    <MapView
+                        style={[styles.map, {height:250}]}
+                        showsUserLocation={true}
+                        initialRegion={{
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                            latitudeDelta: 0.0043,
+                            longitudeDelta: 0.0034,
+                        }}
+                    >
+                        <Marker 
+                            title={this.props.navigation.state.params.item.tour}
+                            coordinate={{
+                                latitude: 37.78825,
+                                longitude: -122.4324,
+                                latitudeDelta: 0.0043,
+                                longitudeDelta: 0.0034,
+                            }} />
+                    </MapView>
+                </View>
             )
         } else if(key == 2) {
             return (
-                <ScrollView style={{ paddingHorizontal: 20, paddingTop: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Ionicon name='ios-timer' size={24} color={'#66c00c'} />
-                        <Text style={{ fontSize: 18, marginLeft: 10, fontFamily: 'sans-serif-medium', color: '#282833' }}>8 hours</Text>
+                <ScrollView style={{ backgroundColor:'#f1f1f1' }}>
+                    <View style={{marginBottom:100}}>
+                    <View style={{ flexDirection: 'row', alignItems:'center', backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10 }}>
+                        <Ionicon name='ios-star' size={26} color={'#f8d807'} />
+                        <Text style={{ fontSize: 24, marginLeft: 10, fontFamily: 'sans-serif-medium', color: '#282833' }}>4</Text>
+                        <Text style={{alignSelf:'flex-end', fontSize:15}}>/5</Text>
+                        <Text style={{fontSize:20, color:'#282833', marginLeft:15}}>Good</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                        <EvilIcon name='location' size={26} color={'#66c00c'} style={{ marginLeft: -4 }} />
-                        <Text style={{ fontSize: 18, marginLeft: 6, fontFamily: 'sans-serif-medium', color: '#282833' }}>{this.props.navigation.state.params.item.location}</Text>
-                    </View>
-                    <View style={{ flex: 1, marginTop: 8, marginBottom: 100 }}>
-                        <Text style={{ fontSize: 15 }}>
-                            Tes
+                    <View style={{ flex: 1, marginTop: 8, backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10 }}>
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                            <Image source={{uri:'https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'}} style={{height:30, width:30}} />
+                            <Text style={{marginLeft:10}}>Andre Feri</Text>
+                        </View>
+                        <Text style={{marginTop:10}}>
+                        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
                         </Text>
+                    </View>
+                    <View style={{ flex: 1, marginTop: 8, backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10 }}>
+                        <View style={{flexDirection:'row', alignItems:'center'}}>
+                            <Image source={{uri:'https://i0.wp.com/www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png?fit=256%2C256&quality=100&ssl=1'}} style={{height:30, width:30}} />
+                            <Text style={{marginLeft:10}}>Asep Lukman</Text>
+                        </View>
+                        <Text style={{marginTop:10}}>
+                        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+                        </Text>
+                    </View>
                     </View>
                 </ScrollView>
             )
         }
     }
 
-    // componentDidMount() {
-    //     axios.get()
-    // }
-
     render() {
         return (
             <Fragment>
                 <View style={{ backgroundColor: '#0000ff' }}>
-                    <Image source={{ uri: this.props.navigation.state.params.item.photo }} style={{ height: 350, zIndex: -999 }} />
+                    <Image source={{ uri: this.props.navigation.state.params.item.photo }} style={{ height: height-400 }} />
                 </View>
-                <View style={{ backgroundColor: '#fff', marginTop: -20, borderTopStartRadius: 20, borderTopEndRadius: 20, padding: 20 }}>
+                <View style={{ backgroundColor: '#fff', padding: 20 }}>
                     <View style={{ flexDirection: 'row' }}>
                         {
                             this.state.button.map(data => (
@@ -156,3 +174,9 @@ export default class Detail extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    }
+})

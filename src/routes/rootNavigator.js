@@ -5,6 +5,7 @@ import Notification from '../screens/Notification';
 import Search from '../screens/Search';
 import User from '../screens/User';
 import TimeLine from '../screens/TimeLine';
+import AddTour from '../screens/AddTour';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Detail from '../screens/Detail';
 
@@ -13,7 +14,7 @@ const bottomTabNavigator = createBottomTabNavigator({
         screen: Home
     },
     Timeline: {
-        screen: TimeLine
+        screen: AddTour
     },
     Search: {
         screen: Search

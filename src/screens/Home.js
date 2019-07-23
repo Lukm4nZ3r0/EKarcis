@@ -17,6 +17,10 @@ const HEIGHT = Dimensions.get('window').height;
 
 export default class Home extends Component {
 
+    static navigationOptions = () => ({
+        header: null
+    })
+
     constructor(props) {
         super(props);
 
@@ -29,22 +33,22 @@ export default class Home extends Component {
                 },
                 {
                     title:"Item 2",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    image:'https://cdn.idntimes.com/content-images/post/20180726/cf1e504e2e1dd20616253ecdce7beb10.jpg',
                     price: '20.000'
                 },
                 {
                     title:"Item 3",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    image:'https://cdn.brilio.net/news/2019/03/08/160528/1003118-1000xauto-wisata-jogja-murah-meriah.jpg',
                     price: '20.000'
                 },
                 {
                     title:"Item 4",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    image:'https://www.nativeindonesia.com/wp-content/uploads/2019/03/jelajah-hutan.jpg',
                     price: '20.000'
                 },
                 {
                     title:"Item 5",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
+                    image:'https://nyero.id/wp-content/uploads/2017/08/Wisata-Baru-Watu-Goyang-Mangunan-Jogja.png',
                     price: '200.000'
                 }
             ],
@@ -130,7 +134,7 @@ export default class Home extends Component {
                     <View style={{backgroundColor:'#fff', marginBottom:10}}>
                         <Text style={{fontFamily:'sans-serif', fontSize:18, color:'#282833'}}>Recomended for you</Text>
                     </View>
-                    <FlatList 
+                    <FlatList
                         data={this.state.carouselItems}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}

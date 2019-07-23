@@ -107,6 +107,7 @@ class Home extends Component {
     componentDidMount() {
         axios.get('http://52.27.82.154:7000/tour')
         .then((response) => {
+            console.log(response)
             this.setState((prevState) => {
                 return {
                     tour: response.data.data

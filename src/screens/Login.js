@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import { View, Text, TouchableOpacity, ScrollView, Image, Dimensions, TextInput } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
+import axios from 'axios'
+import URL from '../public/redux/actions/URL'
 
 const {width,height} = Dimensions.get('window')
 
@@ -9,10 +11,10 @@ class Login extends Component {
     constructor(props){
         super(props)
         this.state = {
-            username:'',
+            email:'',
             password:'',
-            errorUsername:false,
-            errorSpaceUsername:false,
+            errorEmail:false,
+            errorSpaceEmail:false,
             errorPassword:false,
             errorSpacePassword:false,
             loginButtonDisabled:false,
@@ -24,19 +26,19 @@ class Login extends Component {
             header:null
         }
     }
-    usernameValidate = (text) =>{
-        let reg = /^[a-zA-Z0-9]*$/
+    emailValidate = (text) =>{
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
         if(reg.test(text)===false){
-            this.setState({errorSpaceUsername:true, username:''})
+            this.setState({errorSpaceEmail:true, email:''})
         }
         else{
             if(text.length<6){
-                this.setState({errorUsername:true, username:''})
+                this.setState({errorEmail:true, email:''})
             }
             else{
-                this.setState({username:text, errorUsername:false})
+                this.setState({email:text, errorEmail:false})
             }
-            this.setState({errorSpaceUsername:false})
+            this.setState({errorSpaceEmail:false})
         }
     }
     passwordValidate = (text) =>{
@@ -47,10 +49,28 @@ class Login extends Component {
             this.setState({password:text, errorPassword:false})
         }
     }
+    componentDidMount(){
+        axios.get(`${URL}/province`).then((response)=>{
+            console.log(response)
+        })
+    }
     loginEvent = () =>{
-        const {username,password} = this.state
-        if(username.length>0 && password.length>0){
-            this.setState({loginButtonDisabled:true, username:'', password:'',loginButtonError:false})
+        const {email,password} = this.state
+        if(email.length>0 && password.length>0){
+            console.log('ini adalah url',URL+'/auth_login')
+            console.log('ini adalah email',email)
+            console.log('ini adalah password',password)
+
+            axios.post(`http://52.27.82.154:7000/auth_login`,{
+                email:'test@test.com',
+                password:'testtest'
+            }).then((response)=>{
+                console.log(response)
+                console.log(URL)
+                this.setState({loginButtonDisabled:true, email:'', password:'',loginButtonError:false})
+            }).catch(error =>{
+                console.log(error)
+            })
         }
         else{
             this.setState({loginButtonDisabled:true,loginButtonError:true})
@@ -60,7 +80,7 @@ class Login extends Component {
         
     }
     render() {
-        const {errorUsername,errorPassword,errorSpaceUsername,errorSpacePassword,loginButtonDisabled,loginButtonError} = this.state
+        const {errorEmail,errorPassword,errorSpaceEmail,errorSpacePassword,loginButtonDisabled,loginButtonError} = this.state
         return (
             <View style={{flex:1, width:'100%', backgroundColor:'#C9E4BB'}}>
                 <View style={{ flex:1, height:height, width:'100%'}}>
@@ -71,14 +91,14 @@ class Login extends Component {
                                     <Image style={{flex:1,width:200, height:200,resizeMode: 'contain',}} source={require('../../assets/images/1.png')}/>
                                 </View>
                                 {loginButtonError && <View style={{justifyContent:'center'}}><Text style={{color:'red'}}>Please fill in the form correctly.</Text></View>}
-                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorUsername || errorSpaceUsername?1:0, borderColor:'red'}}>
+                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorEmail || errorSpaceEmail?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="user" style={{fontSize:20, color:'grey'}} />
                                     </View>
-                                    <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={()=>this.setState({loginButtonDisabled:false})} onChangeText={this.usernameValidate} placeholder="Username" placeholderTextColor="grey"/></View>
+                                    <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={()=>this.setState({loginButtonDisabled:false})} onChangeText={this.emailValidate} placeholder="Email" placeholderTextColor="grey"/></View>
                                 </View>
-                                {errorUsername && <View style={{justifyContent:'center', width:'90%'}}><Text style={{color:'red'}}>- username must be more than 6 characters.</Text></View>}
-                                {errorSpaceUsername && <View style={{justifyContent:'center', width:'90%'}}><Text style={{color:'red'}}>- don't use spaces.</Text></View>}
+                                {errorEmail && <View style={{justifyContent:'center', width:'90%'}}><Text style={{color:'red'}}>- Email must be more than 6 characters.</Text></View>}
+                                {errorSpaceEmail && <View style={{justifyContent:'center', width:'90%'}}><Text style={{color:'red'}}>- email not valid.</Text></View>}
                                 <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorPassword || errorSpacePassword?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="key" style={{fontSize:20, color:'grey'}} />

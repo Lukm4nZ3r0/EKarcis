@@ -69,7 +69,7 @@ const appStackNavigator = createStackNavigator({
             header: null,
         }),
     },
-    Login,
+    Login: {screen:Login},
     Register,
     MyEditProfileScreen,
     MyProfileScreen,

@@ -452,11 +452,11 @@ export default class Home extends Component {
                         <View style={{ flex: 1, justifyContent: 'center', backgroundColor:'#80c7cd', padding:20}}>
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flex: 1, justifyContent:'center' }}>
-                                    <Text style={{ fontSize: 24, color: '#fff' }}>Logo</Text>
+                                    <Text style={{ fontSize: 24, color: '#fff' }}>EXtick</Text>
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat')}>
                                             <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#80c7cd',
+        backgroundColor: '#C9E4BB',
         overflow: 'hidden',
     },
     backgroundImage: {

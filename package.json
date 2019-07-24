@@ -21,7 +21,12 @@
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
-    "redux-promise-middleware": "^6.1.1"
+    "redux-promise-middleware": "^6.1.1",
+    "moment": "^2.24.0",
+    "react-native-modalbox": "^1.7.1",
+    "react-native-numeric-input": "^1.8.3",
+    "react-native-qrcode-svg": "^5.1.2",
+    "react-native-svg": "^9.5.3"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",

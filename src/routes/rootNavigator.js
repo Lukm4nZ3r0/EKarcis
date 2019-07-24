@@ -29,7 +29,7 @@ const appStackNavigator = createStackNavigator({
     },
 },
     {
-        initialRouteName: 'MyTicket'
+        initialRouteName: 'Notification'
     },
 )
 

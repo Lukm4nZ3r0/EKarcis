@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Alert, TextInput, DatePickerAndroid } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Alert, TextInput, DatePickerAndroid, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -20,50 +20,58 @@ export default class Payment extends Component {
 
     constructor(props) {
         super(props);
+        let date = Date.now()
         this.state = {
             
             loading: true,
             isEmpty: false,
-            dataPayment: [],
-            destination:{
-                price:'80000'
-            },
-            total: '',
-            coins: 80000 * 2/100,
+            dataTour: [],
+            dataUser: [],
+            price: 0,
+            total: 0,
+            coins: 0,
             isDateTimePickerVisible: false,
-            checkIn: "" || moment().format('DD/MM/YYYY'),
-            nameBuyer: 'Ilham Yoga Pratama',
+            checkIn: "" || date,
+            nameBuyer: '',
             amount: 1,
             visible: false,
-            paymentName: '' || 'Indomaret',
-            paymentImage: '' || 'https://i.pinimg.com/originals/84/1c/d2/841cd2c6a7c47838c99541f901fac4fb.png',
-            paymentStatus: false
+            paymentMethod: ''|| 'bni',
+            paymentName: '' || 'Bank BNI',
+            paymentImage: '' || 'https://um.undip.ac.id/uploads/filemanager/bni.png',
+            paymentStatus: false,
+            isLoading: false,
         }
     }
 
-    // formatNumber = nums => {
-    //     return nums.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-    // }
+    formatNumber = num => {
+        return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    }
 
     componentDidMount() {
-        console.log('Cekkkkkkkk')
-        this.getData;    
+        this.getData();
     }
 
     getData = () => {
-        axios.post("http://192.168.6.101:7000/gettransaction/",{
+        axios.post("http://192.168.6.101:7000/gettransaction",{
             id_user: 1,
             id_tour: 1
         })
         .then((res) => {
-            console.log('Cek data', res)
-            const data = res.data;
-            console.log('Cek data2', data)
-            if (Object.keys(data).length < 0) {
-                this.setState({ dataPayment: data.data, loading: false, isEmpty: true });
+            const dataUser = res.data.data.user[0]
+            const dataTour = res.data.data.tour[0]
+            if (dataUser.length < 0 && dataTour.length < 0 ) {
+                this.setState({ loading: false, isEmpty: true });
             }
             else {
-                this.setState({ dataPayment: data.data, loading: false });
+                this.setState({ 
+                    dataUser: dataUser,
+                    nameBuyer: dataUser.name,
+                    dataTour: dataTour,
+                    price: dataTour.cost,
+                    coins: dataTour.cost * 2/100,
+                    total: dataTour.cost * this.state.amount,
+                    loading: false 
+                });
             }
 
             })
@@ -72,8 +80,37 @@ export default class Payment extends Component {
             });
     }
 
+    Transaksi = () =>{
+        this.setState({ isLoading: true})
+        if ( this.state.nameBuyer != '' && this.state.amount != 0) {
+            let dataReg = {
+                id_user : this.state.dataUser.id_user,
+                name : this.state.nameBuyer,
+                id_tour : this.state.dataTour.id_tour,
+                ticket_amount : this.state.amount,
+                booking_date : this.state.checkIn,
+                coins_bonus : this.state.coins,
+                total_price : this.state.total,
+                payment_method : this.state.paymentMethod
+            };
+            axios.post('http://192.168.6.101:7000/transaction',dataReg)
+            .then((res)=>{
+                this.setState({ isLoading: false })
+                this.props.navigation.navigate('Checkout', res.data.data[0])
+            })
+            .catch(error => {
+                this.setState({ isLoading: false });
+                alert("Failed to get tokens, please check your connection")
+            });
+        } 
+        else {
+            this.setState({ isLoading: false });
+            Alert.alert("Field cannot empty");
+        }
+    }
+
     handlePaymentCek = () => {
-        this.props.navigation.navigate('Checkout');
+        this.Transaksi();
     }
 
     datePicker = async () => {
@@ -85,7 +122,7 @@ export default class Payment extends Component {
             });
             if (action !== DatePickerAndroid.dismissedAction) {
               this.setState({
-                  checkIn: day+"/"+month+"/"+year
+                  checkIn: year+"/"+(month+1)+"/"+day
               })
             }
           } catch ({code, message}) {
@@ -112,6 +149,19 @@ export default class Payment extends Component {
     render() {
         return (
             <View style={styles.container}>
+
+                { (this.state.isLoading == true) ?
+                    <View style={styles.modalLoading}>
+                        <View style={styles.loading}>
+                            <ActivityIndicator size="large" color="green" />
+                        </View>
+                    </View>
+                    : null
+                }
+
+                { this.state.loading ?
+                  <ActivityIndicator size="large" color="#CFD8DC" style={{ marginVertical: 25 }} /> :
+
                 <ScrollView style={{flex:1}}>
                     <View style={{justifyContent:'flex-start', alignItems:'center', height: 200, borderColor:'#3b366c'}}>
                         <Image
@@ -127,23 +177,25 @@ export default class Payment extends Component {
                     </View>
                     <View style={{alignItems:'center', marginBottom:18}}>
                         <Text numberOfLines={1} style={{fontSize:20, marginBottom:2, color:'#595653'}}>
-                            {this.state.dataPayment.tour}
+                            {this.state.dataTour.tour}
                         </Text>
                         <Text numberOfLines={1} style={{fontSize:16, marginBottom:10,}}>
                             Open 08:00 - Close 16:00
                         </Text>
                         <Text numberOfLines={1} style={{fontSize:25, marginBottom:2, color:'#595653'}}>
-                            Rp. {this.state.dataPayment.cost}
+                            Rp. {this.formatNumber(this.state.dataTour.cost)}
                         </Text>
                     </View>
                     <View style={{ alignItems:'center', marginBottom:20 }}>
                         <View style={{ width:'90%', flexDirection:'row', borderBottomWidth:2, borderBottomColor:'#f1f1f1' }}>
                             <Text numberOfLines={1} style={{ fontSize:17, marginBottom:13 }}>
-                                Name
+                                Full Name
                             </Text>
                             <View style={{ flex:1, alignItems:'flex-end' }}>
                                 <TextInput
-                                    numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}
+                                    numberOfLines={1} 
+                                    placeholder='Fill your name'
+                                    style={{ fontSize:19, marginBottom:13, maxWidth:'90%', height:46, color:'#363838', borderBottomWidth:1, borderColor:'#bfb50a'}}
                                     onChangeText={(text) => this.setState({ nameBuyer: text })}
                                     value={this.state.nameBuyer}
                                 />
@@ -161,8 +213,8 @@ export default class Payment extends Component {
                                     onChange={text => {
                                         this.setState({
                                             amount: text,
-                                            total: this.state.destination.price * text,
-                                            coins: (this.state.destination.price * text) * (2/100)
+                                            total: this.state.price * text,
+                                            coins: (this.state.price * text) * (2/100)
                                         })
                                     }} 
                                     totalWidth={100} 
@@ -180,14 +232,14 @@ export default class Payment extends Component {
                     <View style={{ alignItems:'center', marginBottom:20 }}>
                         <View style={{ width:'90%', flexDirection:'row', borderBottomWidth:2, borderBottomColor:'#f1f1f1' }}>
                             <Text numberOfLines={1} style={{ fontSize:17, marginBottom:13 }}>
-                                CheckIn
+                                Booking Date
                             </Text>
                             <View style={{ flex:1, alignItems:'flex-end' }}>
                                 <TouchableOpacity
                                     onPress={this.datePicker}
                                 >
                                     <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                        {this.state.checkIn}
+                                        { moment(this.state.checkIn).format('dddd, DD MMMM YYYY') }
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -231,7 +283,7 @@ export default class Payment extends Component {
                                     source={{uri: this.state.paymentImage}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.destination.price * this.state.amount}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(this.state.total)}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -257,7 +309,8 @@ export default class Payment extends Component {
                     </View>
 
                 </ScrollView>
-                <Modal style={styles.modal} position={"bottom"} ref={"modal6"} swipeArea={20}>
+                }
+                <Modal style={styles.modal} position={"bottom"} ref={"modal6"} swipeArea={30} swipeToClose={true}>
                     <ScrollView>
                         <View style={{ paddingHorizontal:20, paddingVertical:12, borderBottomWidth:1.5, borderColor:'#e8e8e6'}}>
                             <Text style={{ fontSize:18, fontWeight:'bold' }}>Payment Method</Text>
@@ -266,11 +319,12 @@ export default class Payment extends Component {
                             <TouchableOpacity
                                 onPress={() => 
                                     this.refs.modal6.close() & 
-                                    this.setState({
-                                        paymentName:'Indomaret',
-                                        paymentCost:'',
-                                        paymentImage:'https://i.pinimg.com/originals/84/1c/d2/841cd2c6a7c47838c99541f901fac4fb.png',
-                                    })
+                                    alert('this payment method is under maintenance')
+                                    // this.setState({
+                                    //     paymentName:'Indomaret',
+                                    //     paymentCost:'',
+                                    //     paymentImage:'https://i.pinimg.com/originals/84/1c/d2/841cd2c6a7c47838c99541f901fac4fb.png',
+                                    // })
                                 }
                                 style={{ borderRadius: 8, height:55, flexDirection:'row', padding:8, elevation:2, backgroundColor:'#009bf4', alignItems:'center', marginTop:10}}
                             >
@@ -280,37 +334,39 @@ export default class Payment extends Component {
                                     source={{uri: 'https://i.pinimg.com/originals/84/1c/d2/841cd2c6a7c47838c99541f901fac4fb.png'}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.destination.price * this.state.amount}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(this.state.total)}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => 
-                                    this.refs.modal6.close() & 
+                                    this.refs.modal6.close() &
                                     this.setState({
-                                        paymentName:'Alfamart',
+                                        paymentMethod: 'bni',
+                                        paymentName:'Bank BNI',
                                         paymentCost:'',
-                                        paymentImage:'https://dad0jvgioe6jb.cloudfront.net/logos/78/578/logo_alfamart.png',
+                                        paymentImage:'https://um.undip.ac.id/uploads/filemanager/bni.png',
                                     })
                                 }
                                 style={{ borderRadius: 8, height:55, flexDirection:'row', padding:8, elevation:2, backgroundColor:'#009bf4', alignItems:'center', marginTop:10}}
                             >
-                                <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Alfamart</Text>
+                                <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Bank BNI</Text>
                                 <Image
                                     style={{width:70, height:30}}
-                                    source={{uri: 'https://dad0jvgioe6jb.cloudfront.net/logos/78/578/logo_alfamart.png'}}
+                                    source={{uri: 'https://um.undip.ac.id/uploads/filemanager/bni.png'}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.total}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(this.state.total)}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => 
-                                    this.refs.modal6.close() & 
-                                    this.setState({
-                                        paymentName:'Bank BRI',
-                                        paymentCost:'',
-                                        paymentImage:'https://pngimage.net/wp-content/uploads/2018/06/icon-bri-png-6.png',
-                                    })
+                                    this.refs.modal6.close() &
+                                    alert('this payment method is under maintenance')
+                                    // this.setState({
+                                    //     paymentName:'Bank BRI',
+                                    //     paymentCost:'',
+                                    //     paymentImage:'https://pngimage.net/wp-content/uploads/2018/06/icon-bri-png-6.png',
+                                    // })
                                 }
                                 style={{ borderRadius: 8, height:55, flexDirection:'row', padding:8, elevation:2, backgroundColor:'#009bf4', alignItems:'center', marginTop:10}}
                             >
@@ -320,17 +376,18 @@ export default class Payment extends Component {
                                     source={{uri: 'https://pngimage.net/wp-content/uploads/2018/06/icon-bri-png-6.png'}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.destination.price * this.state.amount}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(this.state.total)}</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => 
                                     this.refs.modal6.close() & 
-                                    this.setState({
-                                        paymentName:'ATM Bersama',
-                                        paymentCost:'',
-                                        paymentImage:'https://upload.wikimedia.org/wikipedia/id/e/e8/ATM_Bersama_2016.png',
-                                    })
+                                    alert('this payment method is under maintenance')
+                                    // this.setState({
+                                    //     paymentName:'ATM Bersama',
+                                    //     paymentCost:'',
+                                    //     paymentImage:'https://upload.wikimedia.org/wikipedia/id/e/e8/ATM_Bersama_2016.png',
+                                    // })
                                 }
                                 style={{ borderRadius: 8, height:55, flexDirection:'row', padding:8, elevation:2, backgroundColor:'#009bf4', alignItems:'center', marginTop:10}}
                             >
@@ -340,12 +397,17 @@ export default class Payment extends Component {
                                     source={{uri: 'https://upload.wikimedia.org/wikipedia/id/e/e8/ATM_Bersama_2016.png'}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.destination.price}{this.state.destination.price * this.state.amount}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(this.state.total)}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
                 </Modal>
+
+                {/* <Modal style={[styles.modal, styles.modal3]} position={"center"} ref={"modal3"} isDisabled={this.state.isDisabled}>
+                    <Text style={styles.text}>Modal centered</Text>
+                    <Button onPress={() => this.setState({isDisabled: !this.state.isDisabled})} style={styles.btn}>Disable ({this.state.isDisabled ? "true" : "false"})</Button>
+                </Modal> */}
             </View>
         )
     }
@@ -361,6 +423,26 @@ const styles = StyleSheet.create({
         height: 320,
         borderTopLeftRadius:10,
         borderTopRightRadius:10
-    }
+    },
+
+    modalLoading : {
+        height: '100%',
+        width: '100%',
+        zIndex:1,
+        position:'absolute',
+        backgroundColor:'rgba(0,0,0,0.22)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    
+    loading: {
+        backgroundColor: 'white',
+        width: 200,
+        height: 100,
+        borderRadius: 5,
+        elevation: 5,
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
 
 });

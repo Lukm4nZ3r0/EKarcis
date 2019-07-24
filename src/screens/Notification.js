@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { createAppContainer, createMaterialTopTabNavigator } from 'react-navigation';
+import { createAppContainer, createMaterialTopTabNavigator, ActivityIndicator } from 'react-navigation';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/Fontisto';
-import Paid from '../components/Paid'
-
-const data = [
-    {
-        title:"Order not paid",
-        time:"22-07-2019 11:50"
-    },
-    {
-        title:"Order not paid",
-        time:"25-07-2019 12:50"
-    },
-];
+import Paid from '../components/Paid';
+import moment from 'moment';
+import axios from 'axios';
+// import LottieView from 'lottie-react-native';
 
 class Notification extends Component {
     
@@ -26,20 +18,47 @@ class Notification extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data:data
+            data: [],
+            loading: true,
+            isEmpty: false,
         }
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    getData = () => {
+        axios.get(`http://192.168.6.101:7000/get_data_transaction?id_user=${1}&status=${'unpaid'}`)
+        .then((res) => {
+            let data = res.data.data;
+            if (data.length < 0) {
+                this.setState({ loading: false, isEmpty: true });
+            }
+            else {
+                this.setState({
+                    'data': data,
+                    loading: false 
+                });
+            }
+        })
+        .catch(error => {
+            alert(error)
+            this.setState({ loading: false, error: "something went wrong" });
+        });
     }
 
     render() {
         return (
             <View style={{ flex:1 }}>
-                <View>
+                {/* <LottieView source={require('..assets/spinner.json')} autoPlay loop /> */}
+                <View style={{ marginBottom:100 }}>
                     <FlatList
                         style={{ paddingVertical:20 }}
                         data={this.state.data}
                         renderItem={({ item, index }) => (
                             <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('Payment')}
+                                onPress={() => this.props.navigation.navigate('Checkout', item)}
                                 style={{ flexDirection:'row', borderRadius:5, padding:8, marginHorizontal:20, elevation:2, backgroundColor:'#e9f5f3', alignItems:'center', marginVertical:6}}
                             >
                                 <Icon
@@ -49,8 +68,8 @@ class Notification extends Component {
                                     color='#894cba'
                                 />
                                 <View>
-                                    <Text style={{ fontSize:16, marginBottom:2 }}>{item.title}</Text>
-                                    <Text>{item.time}</Text>
+                                    <Text style={{ fontSize:16, marginBottom:2 }}>Please complete your payment</Text>
+                                    <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
                                 </View>
                             </TouchableOpacity>
                         )}

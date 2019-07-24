@@ -3,21 +3,8 @@ import { View, Text } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/Fontisto';
-
-const data = [
-    {
-        title:"Ticket has been purchased",
-        time:"22-07-2019 11:50"
-    },
-    {
-        title:"Ticket has been purchased",
-        time:"25-07-2019 12:50"
-    },
-    {
-        title:"Ticket has been purchased",
-        time:"10-07-2019 16:50"
-    },
-];
+import moment from 'moment';
+import axios from 'axios';
 
 export default class Paid extends Component {
     
@@ -28,8 +15,32 @@ export default class Paid extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data:data
+            data:[]
         }
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    getData = () => {
+        axios.get(`http://192.168.6.101:7000/get_data_transaction?id_user=${1}&status=${'paid'}`)
+        .then((res) => {
+            let data = res.data.data;
+            if (data.length < 0) {
+                this.setState({ loading: false, isEmpty: true });
+            }
+            else {
+                this.setState({
+                    'data': data,
+                    loading: false 
+                });
+            }
+        })
+        .catch(error => {
+            alert(error)
+            this.setState({ loading: false, error: "something went wrong" });
+        });
     }
 
     render() {
@@ -51,8 +62,8 @@ export default class Paid extends Component {
                                     color='green'
                                 />
                                 <View>
-                                    <Text style={{ fontSize:16, marginBottom:2 }}>{item.title}</Text>
-                                    <Text>{item.time}</Text>
+                                    <Text style={{ fontSize:16, marginBottom:2 }}>Ticket purchased & check your ticket</Text>
+                                    <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
                                 </View>
                             </TouchableOpacity>
                         )}

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import Modal from 'react-native-modalbox';
+import moment from 'moment';
 
 export default class CheckOut extends Component {
     
@@ -18,15 +18,20 @@ export default class CheckOut extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: '',
+            data:[],
             visible: false,
-            paymentName: '' || 'Indomaret',
-            paymentImage: '' || 'https://i.pinimg.com/originals/84/1c/d2/841cd2c6a7c47838c99541f901fac4fb.png'
+            paymentName: '' || 'Bank BNI',
+            paymentImage: '' || 'https://um.undip.ac.id/uploads/filemanager/bni.png'
         }
     }
 
-    formatNumber = nums => {
-        return nums.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    componentDidMount = () => {
+        let data = this.props.navigation.state.params;
+        this.setState({ 'data': data})
+    }
+
+    formatNumber = num => {
+        return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
 
     handleCancel= () => {
@@ -63,10 +68,10 @@ export default class CheckOut extends Component {
                     </View>
                     <View style={{alignItems:'center', marginBottom:18}}>
                         <Text numberOfLines={1} style={{fontSize:20, marginBottom:2, color:'#595653'}}>
-                            Pesona Magelang
+                            
                         </Text>
                         <Text numberOfLines={1} style={{fontSize:16, marginBottom:10,}}>
-                            TRANSACTION - 6462847222
+                            {this.state.data.id_transaction}
                         </Text>
                         <Text numberOfLines={1} style={{fontSize:25, marginBottom:2, color:'#595653'}}>
                             Rp. {this.formatNumber(80000)}
@@ -79,7 +84,7 @@ export default class CheckOut extends Component {
                             </Text>
                             <View style={{ flex:1, alignItems:'flex-end' }}>
                                 <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                    Ilham Yoga Pratama
+                                    {this.state.data.name}
                                 </Text>
                             </View>
                         </View>
@@ -91,7 +96,7 @@ export default class CheckOut extends Component {
                             </Text>
                             <View style={{ flex:1, alignItems:'flex-end' }}>
                                 <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                    x 2
+                                    x {this.state.data.ticket_amount}
                                 </Text>
                             </View>
                         </View>
@@ -99,11 +104,11 @@ export default class CheckOut extends Component {
                     <View style={{ alignItems:'center', marginBottom:20 }}>
                         <View style={{ width:'90%', flexDirection:'row', borderBottomWidth:2, borderBottomColor:'#f1f1f1' }}>
                             <Text numberOfLines={1} style={{ fontSize:17, marginBottom:13 }}>
-                                Check In
+                                Booking Date
                             </Text>
                             <View style={{ flex:1, alignItems:'flex-end' }}>
                                 <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                    Sabtu, 27 Juli 2019
+                                    {moment(this.state.booking_date).format('dddd, DD MMMM YYYY')}
                                 </Text>
                             </View>
                         </View>
@@ -121,7 +126,7 @@ export default class CheckOut extends Component {
                                     color='green'
                                 />
                                 <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                    520
+                                    {this.state.data.coins_bonus}
                                 </Text>
                             </View>
                         </View>
@@ -129,7 +134,8 @@ export default class CheckOut extends Component {
                     <View style={{ alignItems:'center', marginBottom:20 }}>
                         <View style={{ width:'90%', height: 170, justifyContent:'center', alignItems:'center' }}>
                             <Text style={{ fontSize:35, fontWeight:'bold' }}>NO REK</Text>
-                            <Text style={{ fontSize:30, fontWeight:'bold' }}>628483372738394</Text>
+                            <Text style={{ fontSize:30, fontWeight:'bold' }}>{this.state.data.va}</Text>
+                            <Text style={{ fontSize:25, fontWeight:'bold' }}>{this.state.data.payment_display_name}</Text>
                         </View>
                     </View>
                     <View style={{ alignItems:'center', borderBottomWidth:2, borderBottomLeftRadius:10, borderBottomRightRadius:10, borderColor:'#e8e8e6' }}>
@@ -143,7 +149,7 @@ export default class CheckOut extends Component {
                                     source={{uri: this.state.paymentImage}}
                                 />
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
-                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.formatNumber(120000)}</Text>
+                                    <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.data.total_price}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>

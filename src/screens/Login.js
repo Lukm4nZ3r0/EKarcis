@@ -53,14 +53,13 @@ class Login extends Component {
     }
     componentDidMount(){
         axios.get(`${URL}/province`).then((response)=>{
-            console.log(response)
+            console.warn(response)
         })
     }
-    loginEvent = () =>{
+    loginEvent = () => {
         this.setState({loginButtonDisabled:true})
         const {email,password} = this.state
-        if(email.length>0 && password.length>0){
-
+        if(email.length>0 && password.length>0) {
             axios.post(`${URL}/auth_login`,querystring.stringify({
                 email:email,
                 password:password
@@ -70,17 +69,17 @@ class Login extends Component {
                 
                 this.props.navigation.state.params.loginEvent(response.data.result[0])
                 this.props.navigation.goBack()
-            }).catch(error =>{
+            }).catch(error => {
                 console.warn(error)
                 this.setState({notFound:true})
+                console.warn('ini adalah url',URL+'/auth_login')
+                console.warn('ini adalah email',email)
+                console.warn('ini adalah password',password)
             })
         }
-        else{
-            this.setState({loginButtonDisabled:true,loginButtonError:true})
+        else {
+            this.setState({loginButtonDisabled:true, loginButtonError:tru})
         }
-    }
-    componentDidMount(){
-        
     }
     render() {
         const {errorEmail,errorPassword,errorSpaceEmail,errorSpacePassword,loginButtonDisabled,loginButtonError,notFound} = this.state

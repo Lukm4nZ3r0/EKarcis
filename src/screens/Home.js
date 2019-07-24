@@ -1,165 +1,474 @@
-import React, { Component, Fragment } from 'react';
-import { 
-    View, 
-    Text, 
-    Dimensions, 
-    Image, 
-    FlatList, 
+import React, { Component } from 'react';
+import {
+    Animated,
+    Platform,
+    StatusBar,
+    StyleSheet,
+    Text,
+    View,
+    RefreshControl,
     TouchableOpacity,
-    ImageBackground
+    FlatList,
+    Image,
+    ImageBackground,
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
-import EvilIcon from 'react-native-vector-icons/EvilIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Carousel from 'react-native-snap-carousel';
-import LinearGradient from 'react-native-linear-gradient'
+import Carousel, {Pagination} from 'react-native-snap-carousel';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
 
 const {width,height} = Dimensions.get('window')
 
-class Home extends Component {
+const HEADER_MAX_HEIGHT = 100;
+const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 73;
+const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+
+export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            scrollY: new Animated.Value(
+                // iOS has negative initial scroll value because content inset...
+                Platform.OS === 'ios' ? -HEADER_MAX_HEIGHT : 0,
+            ),
+            refreshing: false,
             carouselItems: [
                 {
-                    title:"Item 1",
+                    title: "Gunung Kidul",
                     image: 'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
-                    price: '20.000'
+                    price: '20.000',
+                    description: 'Lorem ipsum dolor sit amet kolor molor ga kendor kendor'
                 },
                 {
-                    title:"Item 2",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
-                    price: '20.000'
+                    title: "Pantai Kidul",
+                    image: 'https://cdn.idntimes.com/content-images/post/20180726/cf1e504e2e1dd20616253ecdce7beb10.jpg',
+                    price: '20.000',
+                    description: 'Lorem ipsum dolor sit amet kolor molor ga kendor kendor'
                 },
                 {
-                    title:"Item 3",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
-                    price: '20.000'
+                    title: "Dieng",
+                    image: 'https://cdn.brilio.net/news/2019/03/08/160528/1003118-1000xauto-wisata-jogja-murah-meriah.jpg',
+                    price: '20.000',
+                    description: 'Lorem ipsum dolor sit amet kolor molor ga kendor kendor'
                 },
                 {
-                    title:"Item 4",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
-                    price: '20.000'
+                    title: "Rawa Batu",
+                    image: 'https://www.nativeindonesia.com/wp-content/uploads/2019/03/jelajah-hutan.jpg',
+                    price: '20.000',
+                    description: 'Lorem ipsum dolor sit amet kolor molor ga kendor kendor'
                 },
                 {
-                    title:"Item 5",
-                    image:'https://cdn1-production-images-kly.akamaized.net/mIha9hxFCGnwEUaxXl34JqAvdVk=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1543044/original/046378200_1490090990-Untitled-1.jpg',
-                    price: '200.000'
+                    title: "Gelora Asmara",
+                    image: 'https://nyero.id/wp-content/uploads/2017/08/Wisata-Baru-Watu-Goyang-Mangunan-Jogja.png',
+                    price: '200.000',
+                    description: 'Lorem ipsum dolor sit amet kolor molor ga kendor kendor'
+                }
+            ],
+            activeSlide: 0,
+            category: [],
+            categoryImage: [
+                {
+                    id: '1',
+                    name: 'Nature',
+                    url: 'https://image.freepik.com/free-photo/tropical-green-leaves-background_53876-88891.jpg'
+                },
+                {
+                    id: '2',
+                    name: 'Culture',
+                    url: 'https://image.freepik.com/free-photo/rice-field-bali_1385-1643.jpg'
+                },
+                {
+                    id: '3',
+                    name: 'Myth',
+                    url: 'https://image.freepik.com/free-vector/ancient-egypt-hieroglyphics-background-with-flat-design_23-2147890315.jpg'
+                },
+                {
+                    id: '4',
+                    name: 'Beach',
+                    url: 'https://image.freepik.com/free-vector/realistic-beautiful-sea-view-summer-vacation-concept_1262-11902.jpg'
+                },
+                {
+                    id: '5',
+                    name: 'Flora Fauna',
+                    url: 'https://image.freepik.com/free-photo/butterfly-perched-flower_1253-106.jpg'
                 }
             ],
             tour: [],
-            role:1
+            page: 1,
+            totalPage: 1,
+            isLoadingFooter: false,
+            favourite: []
+        };
+    }
+
+    get pagination() {
+        const { carouselItems, activeSlide } = this.state;
+        return (
+            <Pagination
+                dotsLength={carouselItems.length}
+                activeDotIndex={activeSlide}
+                dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginHorizontal: 1,
+                    backgroundColor: 'yellow'
+                }}
+                inactiveDotStyle={{
+                    // waht
+                }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+                containerStyle={{ marginTop: -40 }}
+            />
+        );
+    }
+
+    nextPage = async () => {
+        if(this.state.page < this.state.totalPage) {
+            this.setState({ isLoadingFooter: true })
+            console.warn('masukkk')
+            await axios.get(`http://52.27.82.154:7000/tour?page=${this.state.page+1}`)
+                .then((response) => {
+                    this.setState({
+                        tour: this.state.tour.concat(response.data.data),
+                        isLoadingFooter: false,
+                        page: response.data.page
+                    })
+                    console.warn(this.state.page);
+                    console.warn(this.state.tour);
+                })
+                .catch(error => console.warn(error));
         }
     }
 
-    _renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity style={{ flex: 1, backgroundColor: '#fff', borderRadius: 8, marginBottom:10, elevation:5 }} onPress={() => {this.props.navigation.navigate('DetailTour', {item})}}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ paddingHorizontal: 5, paddingVertical: 5, justifyContent:'center' }}>
-                        <Image source={{ uri: item.photo }} style={{ width: 110, height: 110, borderRadius: 8 }} />
-                    </View>
-                    <View style={{ padding: 5, flex: 1 }}>
-                        <View style={{flexDirection:'row'}}>
-                            <Text style={{backgroundColor:'#66c00c', color:'#fff', borderRadius:5, paddingHorizontal:5, fontSize:12, marginRight:5}}>{item.name_category}</Text>
-                        </View>
-                        <View style={{flex:1}}>
-                            <Text numberOfLines={1} style={{ fontSize: 20, fontFamily: 'sans-serif-medium', color: '#282833' }}>{item.tour}</Text>
-                            <Text>Rp. {item.cost}</Text>
-                        </View>
-                        <View style={{flex:1}}>
-                            <Text numberOfLines={2} style={{fontSize:12}}>{item.description}</Text>
-                        </View>
-                        <View style={{flex:1, flexDirection:'row', marginTop:5}}>
-                            <View style={{flex:2.6, justifyContent:'center'}}>
-                                <View style={{flexDirection:'row', alignItems:'center'}}>
-                                    <EvilIcon name='location' size={18} />
-                                    <Text style={{fontSize:13}}>{item.province}</Text>
-                                </View>
-                            </View>
-                            <View style={{flex:1, justifyContent:'center'}}>
-                                <View style={{flexDirection:'row', alignItems:'center'}}>
-                                    <Entypo name='ticket' color={'green'} size={16} />
-                                    <Text style={{fontSize:12, marginLeft:3}}>{item.ticketAmount}</Text>
-                                </View>
-                            </View>
-                        </View>
+    refresh = () => {
+        if(this.state.isLoadingFooter) {
+            return (
+                <ActivityIndicator size={'large'} /> 
+            )
+        }
+
+        if(this.state.page == this.state.totalPage) {
+            return (
+                null
+            )
+        } else {
+            return (
+                <View style={{flexDirection:'row', marginBottom:20, paddingHorizontal:25}}>
+                    <View style={{flex:1}}>
+                        <TouchableOpacity style={{borderColor:'#80c7cd', borderWidth:1, padding:10, borderRadius:5}} onPress={this.nextPage}>
+                            <Text style={{textAlign:'center'}}>Load More</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </TouchableOpacity>
-        )
+            )
+        }
     }
 
-    _renderCarousel({item,index}){
+    favourite = (id) => {
+        this.setState({
+            favourite: [...this.state.favourite, id]
+        })
+    }
+
+    _renderScrollViewContent() {
         return (
-            <TouchableOpacity>
-                <ImageBackground style={{flex:1, justifyContent:'flex-end', width:300, marginRight:20, elevation:5}} source={{uri:item.image}}>
-                    <View style={{padding:10}}>
-                        <Text style={{color:'#fff', fontSize:20}}>{item.title}</Text>
-                        <Text style={{color:'#fff'}}>Rp. {item.price}</Text>
+            <React.Fragment>
+                <View style={styles.scrollViewContent}>
+                    <LinearGradient 
+                        style={{backgroundColor:'#6fbcc6', borderBottomRightRadius:250, borderBottomLeftRadius:250}} 
+                        start={{x: 0, y: 0}} 
+                        end={{x: 0, y: 1}}
+                        colors={['#80c7cd','#3297b3']}>
+                    <Carousel
+                        data={this.state.carouselItems}
+                        sliderWidth={400}
+                        onSnapToItem={(index) => this.setState({ activeSlide: index })}
+                        itemWidth={360}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={{ flex: 1, paddingTop: 5 }}>
+                                    <TouchableOpacity style={{ flexDirection: 'row', marginHorizontal: 13, marginTop: -30, marginBottom: 5, justifyContent: 'center', width: 350, height: 300 }}>
+                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <ImageBackground source={{ uri: item.image }} style={{ width: 400, height: 200, justifyContent: 'flex-end', alignItems: 'center' }}>
+                                                <View style={{ backgroundColor: '#fff', width: '70%', borderRadius: 5, elevation: 5, marginBottom: -20, paddingVertical: 10 }}>
+                                                    <View style={{flexDirection:'row'}}>
+                                                        <Text style={{ paddingHorizontal: 20, fontSize: 18, color: '#282833' }}>{item.title}</Text>
+                                                    </View>
+                                                    <Text style={{ paddingHorizontal: 20, paddingBottom: 10, }} numberOfLines={1}>{item.description}</Text>
+                                                    <View style={{ flexDirection: 'row', paddingHorizontal: 20, }}>
+                                                        <View style={{ flex: 1 }}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Ionicons name='ios-star' size={18} color={'#f8d807'} />
+                                                                <Text style={{ color: '#282833', marginLeft: 5 }}>Score 5</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View style={{ flex: 1 }}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Ionicons name='ios-star' size={18} color={'#f8d807'} />
+                                                                <Text style={{ color: '#282833', marginLeft: 5 }}>Score 5</Text>
+                                                            </View>
+                                                        </View>
+                                                        <View style={{ flex: 1 }}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <Ionicons name='ios-star' size={18} color={'#f8d807'} />
+                                                                <Text style={{ color: '#282833', marginLeft: 5 }}>Score 5</Text>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }}
+                    />
+                    </LinearGradient>
+
+                    {this.pagination}
+                    
+                    <View style={{flex:1}}>
+                    <View style={{flexDirection:'row', paddingHorizontal:10, paddingBottom:7}}>
+                        <View style={{flex:1, justifyContent:'center'}}>
+                            <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}}>Category</Text>
+                        </View>
                     </View>
-                </ImageBackground>
-            </TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{flex:1.9}}>
+                            <FlatList
+                                data={this.state.categoryImage.slice(0, 2)}
+                                horizontal={true}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <TouchableOpacity>
+                                            <ImageBackground source={{ uri: item.url }} style={{ height: 70, width: 130, borderRadius: 20 }}>
+                                                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
+                                                    <Text style={{ color: '#fff', fontSize: 22 }}>{item.name}</Text>
+                                                </View>
+                                            </ImageBackground>
+                                        </TouchableOpacity>
+                                )
+                                }} />
+                                <FlatList
+                                    data={this.state.categoryImage.slice(2, 4)}
+                                    horizontal={true}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    renderItem={({ item }) => {
+                                        return (
+                                            <TouchableOpacity>
+                                                <ImageBackground source={{ uri: item.url }} style={{ height: 70, width: 130, borderRadius: 20 }}>
+                                                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
+                                                        <Text style={{ color: '#fff', fontSize: 22 }}>{item.name}</Text>
+                                                    </View>
+                                                </ImageBackground>
+                                            </TouchableOpacity>
+                                        )
+                                    }} />
+                        </View>
+                        <TouchableOpacity style={{flex:1, alignItems:'flex-end'}}>
+                            <ImageBackground source={{ uri: this.state.categoryImage[4].url }} style={{ height: 140, width: 153, borderRadius: 20 }}>
+                                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
+                                    <Text style={{ color: '#fff', fontSize: 22 }}>{this.state.categoryImage[4].name}</Text>
+                                </View>
+                            </ImageBackground>
+                        </TouchableOpacity>
+                    </View>
+                    </View>
+
+                    <View style={{flex:1, paddingHorizontal:10}}>
+                        <View style={{flexDirection:'row', marginTop:20}}>
+                            <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}}>Recomended</Text>
+                        </View>
+
+                        <FlatList 
+                            data={this.state.tour}
+                            keyExtractor={(item, index) => index.toString()}
+                            style={{marginTop:30}}
+                            renderItem={({item}) => {
+                                return (
+                                    <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', elevation:10, alignSelf:'center', borderRadius:8, width:'88%', marginBottom:50}} onPress={() => this.props.navigation.navigate('DetailTour', {item})}>
+                                        <Image source={{uri:item.photo}} style={{height:100, width:100, marginTop:-15, marginLeft:-15, borderRadius:8}} />
+                                        <View style={{flex:1}}>
+                                        <View style={{paddingHorizontal:10, paddingVertical:5}}>
+                                            <View style={{flexDirection:'row'}}>
+                                                <View style={{flex:1}}>
+                                                    <View style={{flexDirection:'row'}}>
+                                                        <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}}>{item.tour}</Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+
+                                            <View style={{flex:1, flexDirection:'row', alignItems:'center', marginVertical:5}}>
+                                                <Ionicons name={'ios-star'} color={'#f8d807'} style={{marginRight:2}} />
+                                                <Ionicons name={'ios-star'} color={'#f8d807'} style={{marginRight:2}} />
+                                                <Ionicons name={'ios-star'} color={'#f8d807'} style={{marginRight:2}} />
+                                                <Ionicons name={'ios-star'} color={'#f8d807'} style={{marginRight:2}} />
+                                                <Ionicons name={'ios-star'} color={'#f8d807'} style={{marginRight:2}} />
+                                                <Text>5</Text>
+                                            </View>
+
+                                            <View style={{flex:1}}>
+                                                <Text numberOfLines={2}>{item.description}</Text>
+                                            </View>
+                                        </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }}
+                             />
+                    </View>
+
+                    {this.refresh()}
+
+                </View>
+            </React.Fragment>
         )
     }
 
     componentDidMount() {
-        axios.get('http://52.27.82.154:7000/tour')
-        .then((response) => {
-            console.log(response)
-            this.setState((prevState) => {
-                return {
-                    tour: response.data.data
-                }
+        axios.get('http://52.27.82.154:7000/category')
+            .then((response) => {
+                this.setState({ category: response.data })
             })
-        })
+            .catch(error => console.warn(error));
+
+        axios.get('http://52.27.82.154:7000/tour')
+            .then((response) => {
+                this.setState((prevState) => {
+                    return {
+                        tour: response.data.data,
+                        page: response.data.page,
+                        totalPage: response.data.totalPage
+                    }
+                })
+            })
+            .catch(error => console.warn(error));
     }
 
     render() {
+
         if(this.state.role==1){
             return(
                 <AdminScreen />
             )
         }
         else{
+            // Because of content inset the scroll value will be negative on iOS so bring
+            // it back to 0.
+            const scrollY = Animated.add(
+                this.state.scrollY,
+                Platform.OS === 'ios' ? HEADER_MAX_HEIGHT : 0,
+            );
+            const headerTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, -HEADER_SCROLL_DISTANCE],
+                extrapolate: 'clamp',
+            });
+
+            const imageOpacity = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [1, 1, 0],
+                extrapolate: 'clamp',
+            });
+            const imageTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, 100],
+                extrapolate: 'clamp',
+            });
+
+            const titleScale = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [1, 1, 0.8],
+                extrapolate: 'clamp',
+            });
+            const titleTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, 0, -8],
+                extrapolate: 'clamp',
+            });
 
             return (
-                <Fragment>
-                    <View style={{ flex: 1, backgroundColor: '#fff', marginTop: 60, paddingHorizontal: 7, paddingTop:10, paddingBottom:10 }}>
-                        {/* <View style={{ flexDirection: 'row'}}>
-                        </View> */}
-                        {/* <Carousel
-                            data={this.state.carouselItems}
-                            sliderWidth={400}
-                            itemWidth={300}
-                            renderItem={this._renderCarousel}
-                            layout={'default'}
-                        /> */}
-                        <View style={{backgroundColor:'#fff', marginBottom:10}}>
-                            <Text style={{fontFamily:'sans-serif', fontSize:18, color:'#282833'}}>Recomended for you</Text>
+                <View style={styles.fill}>
+                    <Animated.ScrollView
+                        style={styles.fill}
+                        scrollEventThrottle={1}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
+                            { useNativeDriver: true },
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => {
+                                    this.setState({ refreshing: true });
+                                    setTimeout(() => this.setState({ refreshing: false }), 1000);
+                                }}
+                                // Android offset for RefreshControl
+                                progressViewOffset={HEADER_MAX_HEIGHT}
+                            />
+                        }
+                        // iOS offset for RefreshControl
+                        contentInset={{
+                            top: HEADER_MAX_HEIGHT,
+                        }}
+                        contentOffset={{
+                            y: -HEADER_MAX_HEIGHT,
+                        }}
+                    >
+                        {this._renderScrollViewContent()}
+                    </Animated.ScrollView>
+                    <Animated.View
+                        pointerEvents="none"
+                        style={[
+                            styles.header,
+                            { transform: [{ translateY: headerTranslate }] },
+                        ]}
+                    >
+                        <Animated.Image
+                            style={[
+                                styles.backgroundImage,
+                                {
+                                    opacity: imageOpacity,
+                                    transform: [{ translateY: imageTranslate }],
+                                },
+                            ]} />
+                    </Animated.View>
+                    <Animated.View
+                        style={[
+                            styles.bar,
+                            {
+                                transform: [
+                                    { translateY: titleTranslate },
+                                ],
+                            },
+                        ]}
+                    >
+                        <View style={{ flex: 1, justifyContent: 'center', backgroundColor:'#80c7cd', padding:20}}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, justifyContent:'center' }}>
+                                    <Text style={{ fontSize: 24, color: '#fff' }}>Logo</Text>
+                                </View>
+                                <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                        <TouchableOpacity>
+                                            <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
+                                            <AntDesign name='heart' size={24} color={'#fff'} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
                         </View>
-                        <FlatList 
-                            data={this.state.carouselItems}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={this._renderCarousel} />
-    
-                        <FlatList 
-                            data={this.state.tour}
-                            showsVerticalScrollIndicator={false}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={this._renderItem}
-                            style={{marginTop:20}} />
-                    </View>
-    
-                    <View style={{ backgroundColor: '#fff', elevation: 5, position: 'absolute', top: 0, right: 0, left: 0 }}>
-                        <View style={{ flex: 1, padding: 20 }}>
-                            <Text>Tes</Text>
-                        </View>
-                    </View>
-                </Fragment>
-            )
+                    </Animated.View>
+                </View>
+            );
         }
     }
 }
@@ -210,8 +519,54 @@ class AdminScreen extends Component{
                         </View>
                     </View>
                 </LinearGradient>
-        )
+        )        
     }
 }
 
-export default Home
+const styles = StyleSheet.create({
+    fill: {
+        flex: 1,
+    },
+    content: {
+        flex: 1,
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#80c7cd',
+        overflow: 'hidden',
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: null,
+        resizeMode: 'cover',
+    },
+    bar: {
+        flex: 1,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0
+    },
+    title: {
+        color: 'white',
+        fontSize: 18,
+    },
+    scrollViewContent: {
+        // iOS uses content inset, which acts like padding.
+        paddingTop: Platform.OS !== 'ios' ? 60 : 0,
+    },
+    row: {
+        height: 40,
+        margin: 16,
+        backgroundColor: '#D3D3D3',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});

@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
-import { View, Text, TouchableOpacity, ScrollView, Image, Dimensions, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, Dimensions, TextInput, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
+import axios from 'axios'
+import URL from '../public/redux/actions/URL'
+import querystring from 'querystring'
 
 const {width,height} = Dimensions.get('window')
 
@@ -23,6 +26,7 @@ class Register extends Component {
             errorForm:false,
             buttonDisabled:false,
             gender:'',
+            emailExist:false
         }
     }
     static navigationOptions = ({navigation}) =>{
@@ -73,8 +77,23 @@ class Register extends Component {
         const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,gender} = this.state
         if(password.length>0 && confirmPassword.length>0 && email.length>0 && name.length>0 && errorPassword==false && errorSpacePassword==false && confirmPasswordError==false && errorName==false && errorEmail==false && errorEmailFormat==false && gender.length>0){
             // register event
+            axios.post(`${URL}/auth_register`,querystring.stringify({
+                email:email,
+                password:password,
+                name:name,
+                gender:gender
+            })).then((response)=>{
+                if(response.data.status===202){
+                    this.setState({emailExist:false})
+                    Alert.alert('Account created succesfully, please Login')
+                    this.props.navigation.goBack()
+                }
+                else{
+                    this.setState({emailExist:true})
+                    console.warn('gagal')
+                }
+            })
             this.setState({errorForm:false,buttonDisabled:true})
-            this.props.navigation.goBack()
         }
         else{
             this.setState({errorForm:true,buttonDisabled:true})
@@ -85,7 +104,7 @@ class Register extends Component {
     }
     render() {
         const gender = [ { key:'Laki - laki', label:'Male' }, { key:'Perempuan', label:'Female' } ]
-        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,errorForm,buttonDisabled} = this.state
+        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,errorForm,buttonDisabled,emailExist} = this.state
         return (
             <View style={{flex:1, width:'100%', backgroundColor:'#C9E4BB'}}>
                 <View style={{ flex:1, height:height, width:'100%'}}>
@@ -96,6 +115,7 @@ class Register extends Component {
                                     <Image style={{flex:1,width:200, height:200,resizeMode: 'contain',}} source={require('../../assets/images/3.png')}/>
                                 </View>
                                 {errorForm && <Text style={{color:'red'}}>please fill in the form correctly.</Text>}
+                                {emailExist && <Text style={{color:'red'}}>Email is Already Exist.</Text>}
                                 <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorEmailFormat || errorEmail ?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="envelope" style={{fontSize:20, color:'grey'}} />

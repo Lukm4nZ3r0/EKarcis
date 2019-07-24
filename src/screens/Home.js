@@ -11,16 +11,14 @@ import {
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Carousel from 'react-native-snap-carousel';
+import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios';
 
-const HEIGHT = Dimensions.get('window').height;
-
+const {width,height} = Dimensions.get('window')
 
 class Home extends Component {
-
     constructor(props) {
         super(props);
-
         this.state = {
             carouselItems: [
                 {
@@ -49,7 +47,8 @@ class Home extends Component {
                     price: '200.000'
                 }
             ],
-            tour: []
+            tour: [],
+            role:1
         }
     }
 
@@ -117,42 +116,100 @@ class Home extends Component {
     }
 
     render() {
-        return (
-            <Fragment>
-                <View style={{ flex: 1, backgroundColor: '#fff', marginTop: 60, paddingHorizontal: 7, paddingTop:10, paddingBottom:10 }}>
-                    {/* <View style={{ flexDirection: 'row'}}>
-                    </View> */}
-                    {/* <Carousel
-                        data={this.state.carouselItems}
-                        sliderWidth={400}
-                        itemWidth={300}
-                        renderItem={this._renderCarousel}
-                        layout={'default'}
-                    /> */}
-                    <View style={{backgroundColor:'#fff', marginBottom:10}}>
-                        <Text style={{fontFamily:'sans-serif', fontSize:18, color:'#282833'}}>Recomended for you</Text>
-                    </View>
-                    <FlatList 
-                        data={this.state.carouselItems}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={this._renderCarousel} />
+        if(this.state.role==1){
+            return(
+                <AdminScreen />
+            )
+        }
+        else{
 
-                    <FlatList 
-                        data={this.state.tour}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={this._renderItem}
-                        style={{marginTop:20}} />
-                </View>
-
-                <View style={{ backgroundColor: '#fff', elevation: 5, position: 'absolute', top: 0, right: 0, left: 0 }}>
-                    <View style={{ flex: 1, padding: 20 }}>
-                        <Text>Tes</Text>
+            return (
+                <Fragment>
+                    <View style={{ flex: 1, backgroundColor: '#fff', marginTop: 60, paddingHorizontal: 7, paddingTop:10, paddingBottom:10 }}>
+                        {/* <View style={{ flexDirection: 'row'}}>
+                        </View> */}
+                        {/* <Carousel
+                            data={this.state.carouselItems}
+                            sliderWidth={400}
+                            itemWidth={300}
+                            renderItem={this._renderCarousel}
+                            layout={'default'}
+                        /> */}
+                        <View style={{backgroundColor:'#fff', marginBottom:10}}>
+                            <Text style={{fontFamily:'sans-serif', fontSize:18, color:'#282833'}}>Recomended for you</Text>
+                        </View>
+                        <FlatList 
+                            data={this.state.carouselItems}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this._renderCarousel} />
+    
+                        <FlatList 
+                            data={this.state.tour}
+                            showsVerticalScrollIndicator={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this._renderItem}
+                            style={{marginTop:20}} />
                     </View>
+    
+                    <View style={{ backgroundColor: '#fff', elevation: 5, position: 'absolute', top: 0, right: 0, left: 0 }}>
+                        <View style={{ flex: 1, padding: 20 }}>
+                            <Text>Tes</Text>
+                        </View>
+                    </View>
+                </Fragment>
+            )
+        }
+    }
+}
+
+class AdminScreen extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            carouselButton:[
+                {key:0, label:'Upload New Tour', image:''},
+                {key:1, label:'View Recent Tour', image:''},
+                {key:2, label:'History of Ticket Purchase', image:''}
+            ]
+        }
+    }
+    _renderItem({item,index}){
+        return (                
+            <View style={{width:'100%', padding:20}}>
+                <View style={{backgroundColor:'white', padding:20, borderRadius:30, elevation:5, alignItems:'center', justifyContent:'center'}}>
+                    <Image style={{width:100, height:100}} source={require('../../assets/images/7.png')}/>
+                    <Text style={{color:'blue', fontSize:20, fontWeight:'bold'}}>{item.label}</Text>
                 </View>
-            </Fragment>
+            </View>
+        )
+    }
+    render(){
+        return(
+                <LinearGradient style={{flex:1}} start={{x: 0, y: 0}} end={{x: 2, y: 2}} colors={['#60935C','#9effa6']}>
+                    <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                        <Image style={{width:200,height:200}} source={require('../../assets/images/2.png')}/>
+                    </View>
+                    <ImageBackground source={require('../../assets/images/5.png')} style={{flex:2, resizeMode:'stretch', zIndex:1}}/>
+                    {/* <Image source={require('../../assets/images/9.png')} style={{flex:2, resizeMode:'stretch', width:'100%'}}/> */}
+                    <View style={{position:'absolute',marginTop:height/7}}>
+                        <Carousel
+                            ref={ref=>this.carousel = ref}
+                            data={this.state.carouselButton}
+                            sliderWidth={width}
+                            itemWidth={width-(width*40/100)}
+                            renderItem={this._renderItem}
+                            onSnapToItem={
+                                index=>this.setState({activeIndex:index})
+                            }
+                        />
+                        <View style={{backgroundColor:'white', margin:20, padding:20, borderRadius:30, elevation:5, justifyContent:'center'}}>
+                            <Text style={{fontSize:20, fontWeight:'bold', color:'blue', marginBottom:20}}>Lorem Ipsum Dolor Sit amet ?</Text>
+                            <Text style={{textAlign:'justify'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                        </View>
+                    </View>
+                </LinearGradient>
         )
     }
 }

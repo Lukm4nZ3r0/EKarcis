@@ -13,14 +13,15 @@ import Register from '../screens/Register'
 import ForgotPassword from '../screens/ForgotPassword'
 import MyProfileScreen from '../screens/MyProfileScreen'
 import MyEditProfileScreen from '../screens/MyEditProfileScreen'
-import Chat from '../screens/Chat'
+import Chat from '../screens/Chat';
+import Wishlist from '../screens/Wishlist';
 
 const bottomTabNavigator = createBottomTabNavigator({
     Home: {
         screen: Home
     },
     Timeline: {
-        screen: AddTour
+        screen: TimeLine
     },
     Search: {
         screen: Search
@@ -66,6 +67,18 @@ const appStackNavigator = createStackNavigator({
     },
     DetailTour: {
         screen: Detail,
+        navigationOptions: () => ({
+            header: null,
+        }),
+    },
+    Wishlist: {
+        screen: Wishlist,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    AddTour: {
+        screen: AddTour,
         navigationOptions: () => ({
             header: null,
         }),

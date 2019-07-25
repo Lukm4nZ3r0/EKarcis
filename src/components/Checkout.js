@@ -140,7 +140,7 @@ export default class CheckOut extends Component {
                     </View>
                     <View style={{ alignItems:'center', borderBottomWidth:2, borderBottomLeftRadius:10, borderBottomRightRadius:10, borderColor:'#e8e8e6' }}>
                         <View style={{ width:'93%' }}>
-                            <TouchableOpacity
+                            <View
                                 style={{ flexDirection:'row', borderTopLeftRadius:10, borderTopRightRadius:10, padding:8, elevation:1, backgroundColor:'#009bf4', alignItems:'center'}}
                             >
                                 <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>{this.state.paymentName}</Text>
@@ -151,7 +151,7 @@ export default class CheckOut extends Component {
                                 <View style={{ alignItems:'flex-end', flex:1 }}>
                                     <Text style={{ color:'#d8ffff', fontSize:17, marginRight:7, marginLeft:5 }}>Rp. {this.state.data.total_price}</Text>
                                 </View>
-                            </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
 

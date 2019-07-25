@@ -141,7 +141,7 @@ export default class Detail extends Component {
         } else if(key == 2) {
             return (
                 <ScrollView style={{ backgroundColor:'#f1f1f1' }}>
-                    <View style={{marginBottom:100}}>
+                    <View style={{ marginBottom:100 }}>
                     <View style={{ flexDirection: 'row', alignItems:'center', backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10 }}>
                         <Ionicon name='ios-star' size={26} color={'#f8d807'} />
                         <Text style={{ fontSize: 24, marginLeft: 10, fontFamily: 'sans-serif-medium', color: '#282833' }}>4</Text>
@@ -177,7 +177,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: true
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })
@@ -185,7 +185,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: false
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })

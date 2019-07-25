@@ -44,10 +44,13 @@ export default class Payment extends Component {
     }
 
     formatNumber = num => {
-        return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+        let format = parseInt(num)
+        return format.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     }
 
     componentDidMount() {
+        console.log('haloo', this.props.navigation.state.params.idUser)
+        console.log('tess', this.props.navigation.state.params.idTour)
         this.getData();
     }
 
@@ -89,7 +92,7 @@ export default class Payment extends Component {
                 id_tour : this.state.dataTour.id_tour,
                 ticket_amount : this.state.amount,
                 booking_date : this.state.checkIn,
-                coins_bonus : this.state.coins,
+                coins_bonus : Math.ceil(this.state.coins),
                 total_price : this.state.total,
                 payment_method : this.state.paymentMethod
             };
@@ -166,7 +169,7 @@ export default class Payment extends Component {
                     <View style={{justifyContent:'flex-start', alignItems:'center', height: 200, borderColor:'#3b366c'}}>
                         <Image
                             style={{width: '100%', height:200}}
-                            source={{uri: 'https://paketwisatajogja75.com/wp-content/uploads/2018/09/PAKET-STUDY-TOUR-DESA-TEMBI-JOGJA-3HARI-2MALAM-START-SORE.jpg'}}
+                            source={{uri: this.state.dataTour.photo}}
                         />
                     </View>
                     <View style={{justifyContent:'center', flex:1, flexDirection:'row', marginTop:-67, marginBottom:10}}>
@@ -258,7 +261,7 @@ export default class Payment extends Component {
                                     color='green'
                                 />
                                 <Text numberOfLines={1} style={{ fontSize:19, marginBottom:13,  color:'#363838'}}>
-                                    {this.state.coins}
+                                    {Math.ceil(this.state.coins)}
                                 </Text>
                             </View>
                         </View>

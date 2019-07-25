@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage, Image } from 'react-native';
+import { View, Text, AsyncStorage, Image, ActivityIndicator, ScrollView } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/Fontisto';
@@ -18,7 +18,9 @@ export default class Paid extends Component {
         this.state = {
             data:[],
             token: '',
-            isLogin: false
+            isLogin: false,
+            idUser: 0,
+            isEmpty: false
         }
     }
 
@@ -46,23 +48,29 @@ export default class Paid extends Component {
         this.getData();
     }
 
-    getData = () => {
-        axios.get(`http://52.27.82.154:7000/get_data_transaction?id_user=${1}&status=${'paid'}`)
+    getData = async () => {
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result })
+            }
+        })
+        axios.get(`http://52.27.82.154:7000/get_data_transaction?id_user=${this.state.idUser}&status=${'paid'}`)
         .then((res) => {
             let data = res.data.data;
-            if (data.length < 0) {
+            if (Object.keys(data).length <= 0) {
                 this.setState({ loading: false, isEmpty: true });
             }
             else {
                 this.setState({
                     'data': data,
-                    loading: false 
+                    loading: false,
+                    isEmpty: false
                 });
             }
         })
         .catch(error => {
             alert(error)
-            this.setState({ loading: false, error: "something went wrong" });
+            this.setState({ loading: false, isEmpty: true });
         });
     }
 
@@ -76,36 +84,50 @@ export default class Paid extends Component {
                     </View>
                 </React.Fragment>
             )
-        } else {
-
-            return (
-                <View style={{ flex:1 }}>
-                    <View>
-                        <FlatList
-                            style={{ paddingVertical:20 }}
-                            data={this.state.data}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate('MyTicket')}
-                                    style={{ flexDirection:'row', borderRadius:5, padding:8, marginHorizontal:20, elevation:2, backgroundColor:'#e9f5f3', alignItems:'center', marginVertical:6}}
-                                >
-                                    <Icon
-                                        style={{marginLeft: 10, marginRight:25}}
-                                        name='ticket'
-                                        size={32}
-                                        color='green'
-                                    />
-                                    <View>
-                                        <Text style={{ fontSize:16, marginBottom:2 }}>Ticket purchased & check your ticket</Text>
-                                        <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-                            keyExtractor={(item,index)=>index.toString()}
-                        />
+        } 
+        else {
+            if (this.state.isEmpty){
+                return(
+                    <React.Fragment>
+                        <View style={{flex:2, backgroundColor:'#F2F6FE',alignItems:'center', justifyContent:'center', opacity:0.5}}>
+                            <Image style={{width:250, height:250}} source={require('../assets/images/datanotfound.png')}/>
+                        </View>
+                    </React.Fragment>
+                )
+            }
+            else {
+                return (
+                    <View style={{ flex:1 }}>
+                        { this.state.loading ?
+                            <ActivityIndicator size="large" color="#CFD8DC" style={{ marginVertical: 25 }} /> :
+                        <ScrollView>
+                            <FlatList
+                                style={{ paddingVertical:20 }}
+                                data={this.state.data}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity
+                                        onPress={() => this.props.navigation.navigate('MyTicket', item)}
+                                        style={{ flexDirection:'row', borderRadius:5, padding:8, marginHorizontal:20, elevation:2, backgroundColor:'#e9f5f3', alignItems:'center', marginVertical:6}}
+                                    >
+                                        <Icon
+                                            style={{marginLeft: 10, marginRight:25}}
+                                            name='ticket'
+                                            size={32}
+                                            color='green'
+                                        />
+                                        <View>
+                                            <Text style={{ fontSize:16, marginBottom:2 }}>Ticket purchased & check your ticket</Text>
+                                            <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+                                keyExtractor={(item,index)=>index.toString()}
+                            />
+                        </ScrollView>
+                        }
                     </View>
-                </View>
-            )
+                )
+            }
         }
     }
 }

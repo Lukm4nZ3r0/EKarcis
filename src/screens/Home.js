@@ -13,7 +13,7 @@ import {
     Image,
     ImageBackground,
     ActivityIndicator,
-    Dimensions
+    Dimensions,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -104,8 +104,19 @@ class Home extends Component {
             totalPage: 1,
             isLoadingFooter: false,
             favourite: [],
-            role:0
+            role:0,
+            idUser: 0
         };
+
+        this._bootstrapAsync();
+    }
+
+    async _bootstrapAsync() {
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result })
+            }
+        })
     }
 
     get pagination() {
@@ -297,7 +308,7 @@ class Home extends Component {
                             renderItem={({item}) => {
                                 return (
                                     <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', elevation:10, alignSelf:'center', borderRadius:8, width:wp(83), marginBottom:50}} onPress={() => this.props.navigation.navigate('DetailTour', {item})}>
-                                        <Image source={{uri:item.photo}} style={{height:hp(16), width:wp(29), marginTop:-15, marginLeft:-15, borderRadius:8}} />
+                                        <Image source={{uri:item.photo}} style={{height:hp(15), width:wp(27), marginTop:-15, marginLeft:-15, borderRadius:8}} />
                                         <View style={{flex:1}}>
                                         <View style={{paddingHorizontal:10, paddingVertical:5}}>
                                             <View style={{flexDirection:'row'}}>
@@ -373,7 +384,6 @@ class Home extends Component {
     }
 
     render() {
-
         if(this.state.role==1){
             return(
                 <AdminScreen navigation={this.props.navigation} />
@@ -496,7 +506,7 @@ class Home extends Component {
                                         <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat')}>
                                             <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist', { id: this.state.idUser })}>
                                             <AntDesign name='heart' size={24} color={'#fff'} />
                                         </TouchableOpacity>
                                     </View>

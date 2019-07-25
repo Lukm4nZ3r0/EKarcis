@@ -1,5 +1,15 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { 
+    View, 
+    Text, 
+    Image, 
+    TouchableOpacity, 
+    ScrollView, 
+    Dimensions, 
+    StyleSheet, 
+    AsyncStorage,
+    ToastAndroid
+} from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
@@ -35,6 +45,8 @@ export default class Detail extends Component {
     constructor(props) {
         super(props);
 
+        this._bootstrapAsync()
+
         this.state = {
             isActiveHome: false,
             isActiveImage: false,
@@ -59,8 +71,36 @@ export default class Detail extends Component {
             buttonSelected: 0,
             tour: [],
             activeKey: 0,
-            favourite: false
+            favourite: false,
+            token: '',
+            isLogin: false,
+            idUser: '',
+            idTour: this.props.navigation.state.params.item.id_tour
         }
+    }
+
+    _bootstrapAsync = async () => {
+        await AsyncStorage.getItem('token', (error, result) => {
+			if(result) {
+				this.setState({
+					token: result
+				})
+			}
+        });
+
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result })
+            }
+        })
+
+        if(this.state.token) {
+            this.setState({ isLogin: true })
+        } else {
+            this.setState({ isLogin: false})
+        }
+
+        console.warn(this.state.token);
     }
 
     setActive = (key) => {
@@ -153,6 +193,8 @@ export default class Detail extends Component {
     }
 
     render() {
+        console.warn(this.state.idUser);
+        console.warn(this.props.navigation.state.params.item.id_tour);
         return (
             <Fragment>
                 <View>
@@ -160,7 +202,7 @@ export default class Detail extends Component {
                 </View>
                 <View style={{flexDirection:'row', paddingHorizontal:20}}>
                     <View style={{flex:1, alignItems:'flex-end'}}>
-                        <TouchableOpacity style={{backgroundColor:'white', padding:15, marginTop:-30, borderRadius:100, elevation:15}} onPress={() => this.favourite()}>
+                        <TouchableOpacity style={{backgroundColor:'white', padding:15, marginTop:-30, borderRadius:100, elevation:15}} onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.favourite()}>
                             <AntDesign name={this.state.favourite == false ? 'hearto' : 'heart'} size={25} color={this.state.favourite == false ? '#808080' : 'red'} />
                         </TouchableOpacity>
                     </View>
@@ -189,7 +231,10 @@ export default class Detail extends Component {
                                 <Text>/person</Text>
                             </View>
                             <View style={{ flex: 1.7, justifyContent: 'center' }}>
-                                <TouchableOpacity style={{ backgroundColor: '#66c00c', paddingVertical: 11, borderRadius: 50, elevation: 5 }}>
+                                <TouchableOpacity style={{ backgroundColor: '#66c00c', paddingVertical: 11, borderRadius: 50, elevation: 5 }} onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.props.navigation.navigate('Payment', {
+                                    idUser: this.state.idUser,
+                                    idTour: this.state.idTour
+                                })}>
                                     <Text style={{ textAlign: 'center', color: '#fff', fontSize: 18 }}>Buy Now</Text>
                                 </TouchableOpacity>
                             </View>
@@ -204,7 +249,7 @@ export default class Detail extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:1, paddingHorizontal:15, paddingVertical:15, alignItems:'flex-end'}}>
-                        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                        <TouchableOpacity onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.favourite()}>
                             <Ionicon name='ios-chatbubbles' size={30} color={'#fff'} />
                         </TouchableOpacity>
                     </View>

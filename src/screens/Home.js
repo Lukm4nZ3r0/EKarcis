@@ -21,6 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import { withNavigationFocus } from "react-navigation";
+import URL from '../public/redux/actions/URL';
 
 const {width,height} = Dimensions.get('window')
 
@@ -137,9 +138,9 @@ class Home extends Component {
             await axios.get(`http://52.27.82.154:7000/tour?page=${this.state.page+1}`)
                 .then((response) => {
                     this.setState({
-                        tour: this.state.tour.concat(response.data.data),
+                        tour: this.state.tour.concat(response.data.data.rows),
                         isLoadingFooter: false,
-                        page: response.data.page
+                        page: response.data.data.page
                     })
                     console.warn(this.state.page);
                     console.warn(this.state.tour);
@@ -335,19 +336,19 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        axios.get(`${URL}/category`)
+        axios.get(`http://52.27.82.154:7000/category`)
             .then((response) => {
                 this.setState({ category: response.data })
             })
             .catch(error => console.warn(error));
 
-        axios.get(`${URL}/tour`)
+        axios.get(`http://52.27.82.154:7000/tour`)
             .then((response) => {
                 this.setState((prevState) => {
                     return {
-                        tour: response.data.data,
-                        page: response.data.page,
-                        totalPage: response.data.totalPage
+                        tour: response.data.data.rows,
+                        page: response.data.data.page,
+                        totalPage: response.data.data.totalPage
                     }
                 })
             })

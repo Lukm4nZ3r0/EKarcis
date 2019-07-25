@@ -13,6 +13,7 @@ class Chat extends Component {
             chatMessage:''
         }
     }
+    
     render() {
         const you = 'Asep'
         return (

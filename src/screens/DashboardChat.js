@@ -9,7 +9,7 @@ export default class DashboardChat extends Component {
             <Fragment>
                 <ScrollView style={{marginTop:60}}>
                     <View style={{paddingHorizontal:15, marginVertical:20,}}>
-                        <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10, elevation:15}}>
+                        <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', paddingHorizontal:20, paddingVertical:10, elevation:15}} onPress={() => this.props.navigation.navigate('Chat')}>
                             <Image source={require('../assets/images/header.jpg')} style={{height:50, width:50, borderRadius:100}} />
                             <View style={{flex:1, marginLeft:10}}>
                                 <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}}>Andre Feri Saputra</Text>

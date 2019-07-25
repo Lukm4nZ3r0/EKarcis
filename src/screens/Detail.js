@@ -177,7 +177,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: true
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })
@@ -185,7 +185,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: false
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })

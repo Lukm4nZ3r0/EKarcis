@@ -16,6 +16,7 @@
     "react-native-image-picker": "^0.28.1",
     "react-native-linear-gradient": "^2.5.5",
     "react-native-maps": "0.25.0",
+    "react-native-modal-datetime-picker": "^7.5.0",
     "react-native-modalbox": "^1.7.1",
     "react-native-numeric-input": "^1.8.3",
     "react-native-qrcode-svg": "^5.1.2",

@@ -336,6 +336,12 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        this.getRole = AsyncStorage.getItem('role').then((role)=>{
+            console.warn('ini role dari Home.js ',role)
+            this.setState({
+                role:Number(role)
+            })
+        })
         axios.get(`http://52.27.82.154:7000/category`)
             .then((response) => {
                 this.setState({ category: response.data })

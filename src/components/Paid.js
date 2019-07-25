@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, AsyncStorage, Image } from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 
 import Icon from 'react-native-vector-icons/Fontisto';
@@ -14,17 +14,40 @@ export default class Paid extends Component {
 
     constructor(props) {
         super(props);
+        this._bootstrapAsync();
         this.state = {
-            data:[]
+            data:[],
+            token: '',
+            isLogin: false
+        }
+    }
+
+    _bootstrapAsync = async () => {
+        await AsyncStorage.getItem('token', (error, result) => {
+            if(result) {
+                this.setState({ token: result })
+            }
+        })
+
+        if(this.state.token) {
+            this.setState({ isLogin: true })
+        } else {
+            this.setState({ isLogin: false })
         }
     }
 
     componentDidMount() {
+        this.willFocusSubscription = this.props.navigation.addListener(
+            'willFocus',
+              () => {
+                this._bootstrapAsync();
+              }
+          );
         this.getData();
     }
 
     getData = () => {
-        axios.get(`http://192.168.6.101:7000/get_data_transaction?id_user=${1}&status=${'paid'}`)
+        axios.get(`http://52.27.82.154:7000/get_data_transaction?id_user=${1}&status=${'paid'}`)
         .then((res) => {
             let data = res.data.data;
             if (data.length < 0) {
@@ -44,33 +67,45 @@ export default class Paid extends Component {
     }
 
     render() {
-        return (
-            <View style={{ flex:1 }}>
-                <View>
-                    <FlatList
-                        style={{ paddingVertical:20 }}
-                        data={this.state.data}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate('MyTicket')}
-                                style={{ flexDirection:'row', borderRadius:5, padding:8, marginHorizontal:20, elevation:2, backgroundColor:'#e9f5f3', alignItems:'center', marginVertical:6}}
-                            >
-                                <Icon
-                                    style={{marginLeft: 10, marginRight:25}}
-                                    name='ticket'
-                                    size={32}
-                                    color='green'
-                                />
-                                <View>
-                                    <Text style={{ fontSize:16, marginBottom:2 }}>Ticket purchased & check your ticket</Text>
-                                    <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                        keyExtractor={(item,index)=>index.toString()}
-                    />
+        if(this.state.isLogin == false) {
+            return (
+                <React.Fragment>
+                    <View style={{flex:2, backgroundColor:'#F2F6FE',alignItems:'center', justifyContent:'center', opacity:0.3}}>
+                        <Image style={{width:250, height:250}} source={require('../../assets/images/6.png')}/>
+                        <Text style={{color:'#575757', fontSize:20}}>Anda belum login</Text>
+                    </View>
+                </React.Fragment>
+            )
+        } else {
+
+            return (
+                <View style={{ flex:1 }}>
+                    <View>
+                        <FlatList
+                            style={{ paddingVertical:20 }}
+                            data={this.state.data}
+                            renderItem={({ item, index }) => (
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('MyTicket')}
+                                    style={{ flexDirection:'row', borderRadius:5, padding:8, marginHorizontal:20, elevation:2, backgroundColor:'#e9f5f3', alignItems:'center', marginVertical:6}}
+                                >
+                                    <Icon
+                                        style={{marginLeft: 10, marginRight:25}}
+                                        name='ticket'
+                                        size={32}
+                                        color='green'
+                                    />
+                                    <View>
+                                        <Text style={{ fontSize:16, marginBottom:2 }}>Ticket purchased & check your ticket</Text>
+                                        <Text>{moment(item.booking_date).format('DD-MM-YYYY hh:mm')}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+                            keyExtractor={(item,index)=>index.toString()}
+                        />
+                    </View>
                 </View>
-            </View>
-        )
+            )
+        }
     }
 }

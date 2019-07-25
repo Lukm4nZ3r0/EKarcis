@@ -52,9 +52,9 @@ export default class Payment extends Component {
     }
 
     getData = () => {
-        axios.post("http://192.168.6.101:7000/gettransaction",{
-            id_user: 1,
-            id_tour: 1
+        axios.post("http://52.27.82.154:7000/gettransaction",{
+            id_user: this.props.navigation.state.params.idUser,
+            id_tour: this.props.navigation.state.params.idTour
         })
         .then((res) => {
             const dataUser = res.data.data.user[0]
@@ -93,7 +93,7 @@ export default class Payment extends Component {
                 total_price : this.state.total,
                 payment_method : this.state.paymentMethod
             };
-            axios.post('http://192.168.6.101:7000/transaction',dataReg)
+            axios.post('http://52.27.82.154:7000/transaction',dataReg)
             .then((res)=>{
                 this.setState({ isLoading: false })
                 this.props.navigation.navigate('Checkout', res.data.data[0])

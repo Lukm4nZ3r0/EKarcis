@@ -2,6 +2,8 @@
   package="com.ekarcis">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
       android:name=".MainApplication"
@@ -21,6 +23,9 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyAgHq05G5JhhCUbvSS0TKs4KQwRdbpu0hQ"/>
     </application>
 
 </manifest>

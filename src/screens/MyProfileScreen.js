@@ -3,6 +3,9 @@ import {View, Text, Image, TouchableOpacity, Dimensions, ScrollView, AsyncStorag
 import LinearGradient from 'react-native-linear-gradient'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Carousel from 'react-native-snap-carousel'
+import { withNavigationFocus } from "react-navigation";
+import axios from 'axios';
+import URL from '../public/redux/actions/URL'
 
 const {width, height} = Dimensions.get('window')
 
@@ -13,7 +16,8 @@ class MyProfileScreen extends Component{
         this.state = {
             isLogged:false,
             userId:'',
-            userData:[]
+            userData:[],
+            profileData:[]
         }
     }
     static navigationOptions = ({navigation}) =>{
@@ -36,14 +40,44 @@ class MyProfileScreen extends Component{
             if(token!=null){
                 AsyncStorage.getItem('idUser').then((idUser)=>{
                     this.setState({isLogged:true,userId:idUser})
+
                     AsyncStorage.getItem('role').then((role)=>{
                         console.warn('ini adalah token:'+token)
                         console.warn('ini adalah idUser:'+idUser)
                         console.warn('ini adalah role:'+role)
+                        axios.get(`${URL}/user/${idUser}`).then((profileData)=>{
+                            console.warn('profileData:',profileData.data)
+                            this.setState({
+                                profileData:profileData.data.result[0]
+                            })
+                        })
                     })
                 })
             }
         })
+    }
+    componentDidUpdate(prevProps){
+        if (prevProps.isFocused !== this.props.isFocused) {
+            AsyncStorage.getItem('token').then((token)=>{
+                if(token!=null){
+                    AsyncStorage.getItem('idUser').then((idUser)=>{
+                        this.setState({isLogged:true,userId:idUser})
+    
+                        axios.get(`${URL}/user/${idUser}`).then((profileData)=>{
+                            console.warn('profileData:',profileData.data)
+                            this.setState({
+                                profileData:profileData.data.result[0]
+                            })
+                        })
+                        AsyncStorage.getItem('role').then((role)=>{
+                            console.warn('ini adalah token:'+token)
+                            console.warn('ini adalah idUser:'+idUser)
+                            console.warn('ini adalah role:'+role)
+                        })
+                    })
+                }
+            })
+        }
     }
     render(){
         const {isLogged} = this.state
@@ -81,13 +115,14 @@ class MyProfileScreen extends Component{
                 <View style={{flex:1,position:'absolute', alignItems:'center', width:'100%', }}>
                 {isLogged?
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                    <Image style={{width:130, height:130, borderRadius:70, margin:25, borderWidth:5, borderColor:'white'}} source={{uri:'https://i0.wp.com/cultofdigital.com/wp-content/uploads/2018/01/wallpapers-whatsapp-cute-panda.jpg?resize=500%2C887'}} />
+                    <Image style={{width:130, height:130, borderRadius:70, margin:25, borderWidth:5, borderColor:'white'}} source={{uri:this.state.profileData.photo}} />
                         <View style={{flex:1}}>
-                        <Text style={{color:'white', fontSize:25, fontWeight:'bold'}}>Your Name</Text>
-                        <Text style={{color:'white', fontSize:17, fontWeight:'200'}}>email@email.com</Text>
-                            <LinearGradient start={{x: 0, y: 0}} end={{x: 2, y: 3}} colors={['#4287f5','#88b6fc']} style={{flexDirection:'row', alignItems:'center', marginTop:20, width:'50%', padding:6, borderRadius:15, elevation:3}}>
-                                <View style={{flex:1,alignItems:'center'}}><FontAwesome style={{ color:'white', fontSize:25}} name="venus"/></View>
-                                <View style={{flex:4,alignItems:'center'}}><Text style={{ color:'white', fontSize:17}}>Male</Text></View>
+                        <Text style={{color:'white', fontSize:25, fontWeight:'bold'}}>{this.state.profileData.name}</Text>
+                        <Text style={{color:'white', fontSize:17, fontWeight:'200'}}>{this.state.profileData.email}</Text>
+                        {/* ['#4287f5','#88b6fc'] */}
+                            <LinearGradient start={{x: 0, y: 0}} end={{x: 2, y: 3}} colors={this.state.profileData.gender=='Perempuan'?['#fc03c6','#ff45d7']:['#4287f5','#88b6fc']} style={{flexDirection:'row', alignItems:'center', marginTop:20, width:'50%', padding:6, borderRadius:15, elevation:3}}>
+                                <View style={{flex:1,alignItems:'center'}}><FontAwesome style={{ color:'white', fontSize:25}} name={this.state.profileData.gender=='Perempuan'?'venus':'mars'}/></View>
+                                <View style={{flex:4,alignItems:'center'}}><Text style={{ color:'white', fontSize:17}}>{this.state.profileData.gender=='Perempuan'?'Female':'Male'}</Text></View>
                             </LinearGradient>
                         </View>
                     </View>
@@ -107,4 +142,4 @@ class MyProfileScreen extends Component{
     }
 }
 
-export default MyProfileScreen
+export default withNavigationFocus(MyProfileScreen)

@@ -62,45 +62,45 @@ const bottomTabNavigator = createBottomTabNavigator({
             }
         })
     }
-)
-
-const appStackNavigator = createStackNavigator({
-    Home: {
-        screen: bottomTabNavigator,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    DetailTour: {
-        screen: Detail,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    Wishlist: {
-        screen: Wishlist,
-        navigationOptions: () => ({
-            header: null
-        })
-    },
-    AddTour: {
-        screen: AddTour,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    Login: {screen:Login},
-    Register,
-    ForgotPassword,
-    MyEditProfileScreen,
-    MyProfileScreen,
-    Chat,
-    SearchChild,
-    RedeemPoints,
+    )
+    
+    const appStackNavigator = createStackNavigator({
+        Home: {
+            screen: bottomTabNavigator,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        DetailTour: {
+            screen: Detail,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        Wishlist: {
+            screen: Wishlist,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        AddTour: {
+            screen: AddTour,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        Login: {screen:Login},
+        Register,
+        ForgotPassword,
+        MyProfileScreen,
+        MyEditProfileScreen,
+        Chat,
+        SearchChild,
+        RedeemPoints,
     // Notification : {
-    //     screen: Notification,
-    //     navigationOptions:({ navigation }) => ({
-    //         headerStyle: {
+        //     screen: Notification,
+        //     navigationOptions:({ navigation }) => ({
+            //         headerStyle: {
     //             backgroundColor: '#64BA5A',
     //             elevation:0
     //         },  

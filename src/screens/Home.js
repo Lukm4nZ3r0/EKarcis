@@ -357,12 +357,10 @@ class Home extends Component {
     componentDidUpdate(prevProps){
         if (prevProps.isFocused !== this.props.isFocused) {
             this.getRole = AsyncStorage.getItem('role').then((role)=>{
-                if(role !== null){
-                    console.warn('ini role dari Home.js ',role)
-                    this.setState({
-                        role:Number(role)
-                    })
-                }
+                console.warn('ini role dari Home.js ',role)
+                this.setState({
+                    role:Number(role)
+                })
             })
         }
     }

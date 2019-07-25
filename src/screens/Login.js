@@ -79,7 +79,7 @@ class Login extends Component {
             })
         }
         else {
-            this.setState({loginButtonDisabled:true, loginButtonError:tru})
+            this.setState({loginButtonDisabled:true, loginButtonError:true})
         }
     }
     render() {

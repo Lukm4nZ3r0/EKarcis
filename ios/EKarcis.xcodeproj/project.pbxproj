@@ -60,10 +60,9 @@
 		1FC98D2D15A24776BD4CAD2B /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB1C4C8FBEC74537A634F34E /* libRNVectorIcons.a */; };
 		92C2229A5B0E4F139E2CAE66 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 851B0D614ABA4427AB1270C9 /* libRNVectorIcons-tvOS.a */; };
 		147EFCBC02BD4B83820CCCB4 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58474964003B42C59DF39F03 /* libRNImagePicker.a */; };
-		B7CDA14A70494EEDA244E0DE /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B35A17231604465B9B9B55E4 /* libAirMaps.a */; };
-		06241DD44B5044CA9EB6C560 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B5E03A27059E48ED874C2C58 /* libRCTOneSignal.a */; };
-		F4851D63926B430A8B8343BD /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 17573DE7442E476D8A035A8A /* libRNSVG.a */; };
-		E6478D918664409AAF7805F1 /* libRNSVG-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B648D19328884F3BB4B80477 /* libRNSVG-tvOS.a */; };
+		EFF5DB34BFFF44DABA80A488 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E98DE93DE8F45CDA800A602 /* libBVLinearGradient.a */; };
+		518C83F7BA394694A260F091 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CB086BDAD454B08B356FA28 /* libAirMaps.a */; };
+		B3D920581C7E437F951DCC04 /* libRCTOneSignal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ECD08CDA19A4F92A8351647 /* libRCTOneSignal.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -395,13 +394,13 @@
 		851B0D614ABA4427AB1270C9 /* libRNVectorIcons-tvOS.a */ = {isa = PBXFileReference; name = "libRNVectorIcons-tvOS.a"; path = "libRNVectorIcons-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		32167C4E0BF54038B9EB3CE5 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		58474964003B42C59DF39F03 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		5E085F152646445E83AD845A /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		B35A17231604465B9B9B55E4 /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		125C66BFA3F14182B364ABE8 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		B5E03A27059E48ED874C2C58 /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		A8674DED84A84A15B004E7B7 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		17573DE7442E476D8A035A8A /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
-		B648D19328884F3BB4B80477 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; name = "libRNSVG-tvOS.a"; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		60B24A85CEAD45C5A62AA136 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F5509810BA7F476085969E24 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		7E98DE93DE8F45CDA800A602 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		48CB2771ADD048CFA23FC737 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		7CB086BDAD454B08B356FA28 /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		26F1DA5B0F5145DC83CF41C3 /* RCTOneSignal.xcodeproj */ = {isa = PBXFileReference; name = "RCTOneSignal.xcodeproj"; path = "../node_modules/react-native-onesignal/ios/RCTOneSignal.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		9ECD08CDA19A4F92A8351647 /* libRCTOneSignal.a */ = {isa = PBXFileReference; name = "libRCTOneSignal.a"; path = "libRCTOneSignal.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,9 +433,9 @@
 				DD4197CFCDD34D6CAA01DD59 /* libRNVectorIcons.a in Frameworks */,
 				8B5E93F77C944935B8041C0E /* libBVLinearGradient.a in Frameworks */,
 				147EFCBC02BD4B83820CCCB4 /* libRNImagePicker.a in Frameworks */,
-				B7CDA14A70494EEDA244E0DE /* libAirMaps.a in Frameworks */,
-				06241DD44B5044CA9EB6C560 /* libRCTOneSignal.a in Frameworks */,
-				F4851D63926B430A8B8343BD /* libRNSVG.a in Frameworks */,
+				EFF5DB34BFFF44DABA80A488 /* libBVLinearGradient.a in Frameworks */,
+				518C83F7BA394694A260F091 /* libAirMaps.a in Frameworks */,
+				B3D920581C7E437F951DCC04 /* libRCTOneSignal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,8 +453,9 @@
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
 				DD2C9193D94349B4A47C9DC6 /* libRNGestureHandler-tvOS.a in Frameworks */,
-				58B28C8E209645028F6FB0E3 /* libRNVectorIcons-tvOS.a in Frameworks */,
-				E6478D918664409AAF7805F1 /* libRNSVG-tvOS.a in Frameworks */,
+				588EFD0F5B394AAD92CE839F /* libRNVectorIcons-tvOS.a in Frameworks */,
+				F6A63162D3234B60B3EC6C49 /* libRNReanimated-tvOS.a in Frameworks */,
+				E38BE59DA7E64BE18DE64A1F /* libRNSVG-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,12 +630,13 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				E77D5657C29B415DA175C7EA /* RNGestureHandler.xcodeproj */,
-				926840D34F754B218351C2DA /* RNVectorIcons.xcodeproj */,
-				17756D9C5FFD40B2B1DADEB4 /* BVLinearGradient.xcodeproj */,
-				32167C4E0BF54038B9EB3CE5 /* RNImagePicker.xcodeproj */,
-				5E085F152646445E83AD845A /* AirMaps.xcodeproj */,
-				125C66BFA3F14182B364ABE8 /* RCTOneSignal.xcodeproj */,
-				A8674DED84A84A15B004E7B7 /* RNSVG.xcodeproj */,
+				C33BB396CBA842E294F0D395 /* RNVectorIcons.xcodeproj */,
+				0F4376F147CD45778A10B4E6 /* RNReanimated.xcodeproj */,
+				AF956610A48245E89C83CC61 /* RNSVG.xcodeproj */,
+				60B24A85CEAD45C5A62AA136 /* RNImagePicker.xcodeproj */,
+				F5509810BA7F476085969E24 /* BVLinearGradient.xcodeproj */,
+				48CB2771ADD048CFA23FC737 /* AirMaps.xcodeproj */,
+				26F1DA5B0F5145DC83CF41C3 /* RCTOneSignal.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -657,7 +658,7 @@
 				00E356EF1AD99517003FC87E /* EKarcisTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				64E4F71DB2DD48DBA18EFCBB /* Resources */,
+				179271947B694563B2617DED /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -684,25 +685,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		64E4F71DB2DD48DBA18EFCBB /* Resources */ = {
+		179271947B694563B2617DED /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				85689772541F4AA9A25E6BD1 /* AntDesign.ttf */,
-				F758BD52EC034FB487DDCF91 /* Entypo.ttf */,
-				277208E25345417386C7B7C8 /* EvilIcons.ttf */,
-				ED9A79BB7DC04A52A9ABCF10 /* Feather.ttf */,
-				B3D2EDC8C64742C5A667AC1C /* FontAwesome.ttf */,
-				9FEE4822C632477FAC260021 /* FontAwesome5_Brands.ttf */,
-				106B801863474D1AA27EBE4D /* FontAwesome5_Regular.ttf */,
-				C89FE5F9213742FFA2A17186 /* FontAwesome5_Solid.ttf */,
-				1AA267F2005649F587168AEB /* Fontisto.ttf */,
-				0F489472ACE740F886ED4519 /* Foundation.ttf */,
-				E79307EDA51E498885B6A461 /* Ionicons.ttf */,
-				ACF1A5A54DD44776B4767D61 /* MaterialCommunityIcons.ttf */,
-				95795D81AECD4BFF95BDF0DB /* MaterialIcons.ttf */,
-				4DE6F45312BD4A6285DF7C90 /* Octicons.ttf */,
-				1B406B1AA5F8453291441B86 /* SimpleLineIcons.ttf */,
-				1A35D0278C9345B0A41F55C2 /* Zocial.ttf */,
+				4ABDB1FA08664A949DE81BDA /* AntDesign.ttf */,
+				7E7B682726DB4C4788186A23 /* Entypo.ttf */,
+				C5ECA65AFE134BF6BED79109 /* EvilIcons.ttf */,
+				1344B0C9CFC14390AE561B65 /* Feather.ttf */,
+				6591BFFE54484BD883C21634 /* FontAwesome.ttf */,
+				8D873A53A68C470F840A6410 /* FontAwesome5_Brands.ttf */,
+				8E0E4609006E4E508E8EBF4B /* FontAwesome5_Regular.ttf */,
+				F7EBD0913A4F4D0F81F59A28 /* FontAwesome5_Solid.ttf */,
+				6C42FF0D082D4361B3A5D223 /* Fontisto.ttf */,
+				C408D30B559245ECA6B39EC3 /* Foundation.ttf */,
+				68E6EABC983240B4AEEA60B1 /* Ionicons.ttf */,
+				E304748FC9924E51AFAEA795 /* MaterialCommunityIcons.ttf */,
+				7AB7C1230A154FFA8F46FA03 /* MaterialIcons.ttf */,
+				6B9987CF803C40E282F18836 /* Octicons.ttf */,
+				9A06A23694B0486D9D2C7D64 /* SimpleLineIcons.ttf */,
+				75ED53C0BA7A4FBB8D197DD1 /* Zocial.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1312,7 +1313,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1320,9 +1320,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Debug;
@@ -1353,7 +1354,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1361,9 +1361,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Release;
@@ -1390,9 +1391,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Debug;
@@ -1418,9 +1420,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Release;
@@ -1459,7 +1462,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1467,9 +1469,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Debug;
@@ -1508,7 +1511,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1516,9 +1518,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Release;
@@ -1556,7 +1559,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1564,9 +1566,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Debug;
@@ -1604,7 +1607,6 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1612,9 +1614,10 @@
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
-					"$(SRCROOT)\..\node_modules\react-native-maps\lib\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-onesignal\ios/**",
-					"$(SRCROOT)\..\node_modules\react-native-svg\ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-onesignal/ios/**",
 				);
 			};
 			name = Release;

@@ -115,7 +115,7 @@ class MyProfileScreen extends Component{
                 <View style={{flex:1,position:'absolute', alignItems:'center', width:'100%', }}>
                 {isLogged?
                     <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center'}}>
-                    <Image style={{width:130, height:130, borderRadius:70, margin:25, borderWidth:5, borderColor:'white'}} source={{uri:this.state.profileData.photo}} />
+                    <Image style={{width:130, height:130, borderRadius:70, margin:25, borderWidth:5, borderColor:'white'}} source={{uri:this.state.profileData.photo?this.state.profileData.photo:'https://i0.wp.com/cultofdigital.com/wp-content/uploads/2018/01/wallpapers-whatsapp-cute-panda.jpg?resize=500%2C887'}} />
                         <View style={{flex:1}}>
                         <Text style={{color:'white', fontSize:25, fontWeight:'bold'}}>{this.state.profileData.name}</Text>
                         <Text style={{color:'white', fontSize:17, fontWeight:'200'}}>{this.state.profileData.email}</Text>

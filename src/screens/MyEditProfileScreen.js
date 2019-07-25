@@ -147,7 +147,7 @@ class MyEditProfileScreen extends Component {
                     work:work,
                     birthday:birthday,
                     gender:gender,
-                    imageLink:photo
+                    imageLink:photo.length==0?'https://i0.wp.com/cultofdigital.com/wp-content/uploads/2018/01/wallpapers-whatsapp-cute-panda.jpg?resize=500%2C887':photo
                 })
             })
         })
@@ -166,7 +166,7 @@ class MyEditProfileScreen extends Component {
                             <View style={{flex:1, borderRadius:30, elevation:5, backgroundColor:'white', alignItems:'center', justifyContent:'center', padding:15, width:'90%'}}>
 
                                 <TouchableOpacity style={{flex:1, marginBottom:25, marginTop:25, flexDirection:'row'}} onPress={this.handleChoosePhoto}>
-                                    <Image style={{width:150, height:150,borderWidth:5, borderColor:'white', borderRadius:80}} source={{uri:photo.length!=0?photo.uri:imageLink}}/>
+                                    <Image style={{width:150, height:150,borderWidth:5, borderColor:'blue', borderRadius:80}} source={{uri:photo.length!=0?photo.uri:imageLink}}/>
                                 </TouchableOpacity>
                                 {errorForm && <Text style={{color:'red'}}>please fill in the form correctly.</Text>}
 

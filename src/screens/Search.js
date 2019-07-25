@@ -23,17 +23,17 @@ export default class Search extends Component {
         axios.get(`${URL}/tour`).then((response)=>{
             console.warn(response.data)
             this.setState({
-                dataFeed:response.data.data,
-                totalPages:response.data.totalPage,
+                dataFeed:response.data.data.rows,
+                totalPages:response.data.data.totalPage,
             })
         })
     }
     nextPage = () =>{
         const {dataFeed} = this.state
         axios.get(`${URL}/tour?page=${this.state.nextPage+1}`).then((response)=>{
-            console.warn('data baru', response.data.data)
+            console.warn('data baru', response.data.data.rows)
             this.setState({
-                dataFeed:[...dataFeed, ...response.data.data],
+                dataFeed:[...dataFeed, ...response.data.data.rows],
                 nextPage: this.state.nextPage+1
             })
         })
@@ -59,7 +59,7 @@ export default class Search extends Component {
                     data={this.state.dataFeed}
                     renderItem={({item})=>{
                         return(
-                        <Image source={{uri:item.photo}} style={{backgroundColor:'green', width:width/3, height:width/3}} />
+                        <Image source={{uri:item.photo}} style={{backgroundColor:'white', width:width/3, height:width/3}} />
                         )
                     }}
                     numColumns={3}

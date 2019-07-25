@@ -26,12 +26,29 @@ class Register extends Component {
             errorForm:false,
             buttonDisabled:false,
             gender:'',
-            emailExist:false
+            emailExist:false,
+            phone:'',
+            phoneError:false
         }
     }
     static navigationOptions = ({navigation}) =>{
         return{
             header:null
+        }
+    }
+    validatePhone = (text) => {
+        let splitText = text.split('')
+        if(splitText[0]+splitText[1] == '08'){
+            this.setState({
+                phone:text,
+                phoneError:false
+            })
+            console.log(this.state.phone)
+        }
+        else{
+            this.setState({
+                phoneError:true
+            })
         }
     }
     validatePassword = (text) =>{
@@ -74,14 +91,15 @@ class Register extends Component {
         }
     }
     registerEvent = () =>{
-        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,gender} = this.state
-        if(password.length>0 && confirmPassword.length>0 && email.length>0 && name.length>0 && errorPassword==false && errorSpacePassword==false && confirmPasswordError==false && errorName==false && errorEmail==false && errorEmailFormat==false && gender.length>0){
+        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,gender, phone} = this.state
+        if(password.length>0 && confirmPassword.length>0 && email.length>0 && name.length>0 && errorPassword==false && errorSpacePassword==false && confirmPasswordError==false && errorName==false && errorEmail==false && errorEmailFormat==false && gender.length>0 && phone.length>0){
             // register event
             axios.post(`${URL}/auth_register`,querystring.stringify({
                 email:email,
                 password:password,
                 name:name,
-                gender:gender
+                gender:gender,
+                phone:phone
             })).then((response)=>{
                 if(response.data.status){
                     this.setState({emailExist:false})
@@ -104,7 +122,7 @@ class Register extends Component {
     }
     render() {
         const gender = [ { key:'Laki - laki', label:'Male' }, { key:'Perempuan', label:'Female' } ]
-        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,errorForm,buttonDisabled,emailExist} = this.state
+        const {password,errorPassword,errorSpacePassword,confirmPassword,confirmPasswordError,name,errorName,email,errorEmail,errorEmailFormat,errorForm,buttonDisabled,emailExist,phoneError} = this.state
         return (
             <View style={{flex:1, width:'100%', backgroundColor:'#C9E4BB'}}>
                 <View style={{ flex:1, height:height, width:'100%'}}>
@@ -121,6 +139,13 @@ class Register extends Component {
                                         <FontAwesome name="envelope" style={{fontSize:20, color:'grey'}} />
                                     </View>
                                     <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={this.buttonEnabled} onChangeText={this.validateEmail} placeholder="Your Email" placeholderTextColor="grey"/></View>
+                                </View>
+                                {phoneError && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>the number format must '08....'.</Text></View>}
+                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:phoneError ?1:0, borderColor:'red'}}>
+                                    <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                                        <FontAwesome name="phone" style={{fontSize:20, color:'grey'}} />
+                                    </View>
+                                    <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={this.buttonEnabled} onChangeText={this.validatePhone} keyboardType={'numeric'} placeholder="Your Phone Number" placeholderTextColor="grey"/></View>
                                 </View>
                                 {errorEmailFormat && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>Wrong email.</Text></View>}
                                 {errorEmail && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>Email characters must be more than one.</Text></View>}

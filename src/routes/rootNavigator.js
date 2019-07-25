@@ -104,7 +104,7 @@ const bottomTabNavigator = createBottomTabNavigator({
         Chat,
         SearchChild,
         RedeemPoints,
-    // Notification : {
+        // Notification : {
         //     screen: Notification,
         //     navigationOptions:({ navigation }) => ({
             //         headerStyle: {

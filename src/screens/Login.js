@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import { View, Text, TouchableOpacity, ScrollView, Image, Dimensions, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Image, Dimensions, TextInput,AsyncStorage } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import axios from 'axios'
 import URL from '../public/redux/actions/URL'
+import querystring from 'querystring'
 
 const {width,height} = Dimensions.get('window')
 
@@ -18,7 +19,8 @@ class Login extends Component {
             errorPassword:false,
             errorSpacePassword:false,
             loginButtonDisabled:false,
-            loginButtonError:false
+            loginButtonError:false,
+            notFound:false
         }
     }
     static navigationOptions = ({navigation}) =>{
@@ -54,28 +56,33 @@ class Login extends Component {
             console.warn(response)
         })
     }
-    loginEvent = () =>{
+    loginEvent = () => {
+        this.setState({loginButtonDisabled:true})
         const {email,password} = this.state
-        if(email.length>0 && password.length>0){
-            console.warn('ini adalah url',URL+'/auth_login')
-            console.warn('ini adalah email',email)
-            console.warn('ini adalah password',password)
-
-            axios.post('http://52.27.82.154:7000/auth_loading', {
-                email: 'test@gmail.com',
-                password: 'testtest'
+        if(email.length>0 && password.length>0) {
+            axios.post(`${URL}/auth_login`,querystring.stringify({
+                email:email,
+                password:password
+            })).then((response)=>{
+                console.warn(response.data.result[0])
+                this.setState({loginButtonDisabled:true, email:'', password:'',loginButtonError:false})
+                
+                this.props.navigation.state.params.loginEvent(response.data.result[0])
+                this.props.navigation.goBack()
+            }).catch(error => {
+                console.warn(error)
+                this.setState({notFound:true})
+                console.warn('ini adalah url',URL+'/auth_login')
+                console.warn('ini adalah email',email)
+                console.warn('ini adalah password',password)
             })
-            .then((res) => {
-                console.warn(res)
-            })
-            .catch((error) => console.warn(error))
         }
-        else{
-            this.setState({loginButtonDisabled:true,loginButtonError:true})
+        else {
+            this.setState({loginButtonDisabled:true, loginButtonError:tru})
         }
     }
     render() {
-        const {errorEmail,errorPassword,errorSpaceEmail,errorSpacePassword,loginButtonDisabled,loginButtonError} = this.state
+        const {errorEmail,errorPassword,errorSpaceEmail,errorSpacePassword,loginButtonDisabled,loginButtonError,notFound} = this.state
         return (
             <View style={{flex:1, width:'100%', backgroundColor:'#C9E4BB'}}>
                 <View style={{ flex:1, height:height, width:'100%'}}>
@@ -86,6 +93,7 @@ class Login extends Component {
                                     <Image style={{flex:1,width:200, height:200,resizeMode: 'contain',}} source={require('../../assets/images/1.png')}/>
                                 </View>
                                 {loginButtonError && <View style={{justifyContent:'center'}}><Text style={{color:'red'}}>Please fill in the form correctly.</Text></View>}
+                                {notFound && <View style={{justifyContent:'center'}}><Text style={{color:'red'}}>Username or password is wrong.</Text></View>}
                                 <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorEmail || errorSpaceEmail?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="user" style={{fontSize:20, color:'grey'}} />

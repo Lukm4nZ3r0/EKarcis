@@ -6,15 +6,15 @@ import LinearGradient from 'react-native-linear-gradient'
 const {width,height} = Dimensions.get('window')
 
 class MyEditProfileScreen extends Component {
-    //nama-, email-, gender-,
+    //nama-, address-, gender-,
     constructor(props){
         super(props)
         this.state = {
             name:'',
             errorName:false,
-            email:'',
-            errorEmail:false,
-            errorEmailFormat:false,
+            address:'',
+            errorAddress:false,
+            errorAddressFormat:false,
             errorForm:false,
             buttonDisabled:false,
             gender:'',
@@ -34,20 +34,14 @@ class MyEditProfileScreen extends Component {
             this.setState({name:'',errorName:true})
         }
     }
-    validateEmail = (text) =>{
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if(reg.test(text)===false){
-            this.setState({errorEmailFormat:true,email:''})
+    validateAddress = (text) =>{
+        if(text.length>0){
+            this.setState({address:text,errorAddress:false})
         }
         else{
-            if(text.length>0){
-                this.setState({email:text,errorEmail:false})
-            }
-            else{
-                this.setState({email:'',errorEmail:true})
-            }
-            this.setState({errorEmailFormat:false})
+            this.setState({address:'',errorAddress:true})
         }
+        this.setState({errorAddressFormat:false})
     }
     validateProfileImage = (text) =>{
         if(text>0){
@@ -58,8 +52,8 @@ class MyEditProfileScreen extends Component {
         }
     }
     editProfileEvent = () =>{
-        const {name,errorName,email,errorEmail,errorEmailFormat,gender} = this.state
-        if(email.length>0 && name.length>0 && errorName==false && errorEmail==false && errorEmailFormat==false && gender.length>0){
+        const {name,errorName,address,errorAddress,errorAddressFormat,gender} = this.state
+        if(address.length>0 && name.length>0 && errorName==false && errorAddress==false && errorAddressFormat==false && gender.length>0){
             // register event
             this.setState({errorForm:false,buttonDisabled:true})
             this.props.navigation.goBack()
@@ -73,7 +67,7 @@ class MyEditProfileScreen extends Component {
     }
     render() {
         const gender = [ { key:'Laki - laki', label:'Male' }, { key:'Perempuan', label:'Female' } ]
-        const {name,errorName,email,errorEmail,errorEmailFormat,errorForm,buttonDisabled,imageLink,errorImage} = this.state
+        const {name,errorName,address,errorAddress,errorAddressFormat,errorForm,buttonDisabled,imageLink,errorImage} = this.state
         return (
             <View style={{flex:1, width:'100%', backgroundColor:'#C9E4BB'}}>
                 <View style={{ flex:1, height:height, width:'100%'}}>
@@ -84,20 +78,19 @@ class MyEditProfileScreen extends Component {
                                     <Image style={{width:150, height:150,borderWidth:5, borderColor:'white', borderRadius:80}} source={{uri:imageLink}}/>
                                 </View>
                                 {errorForm && <Text style={{color:'red'}}>please fill in the form correctly.</Text>}
-                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorEmailFormat || errorEmail ?1:0, borderColor:'red'}}>
+                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="image" style={{fontSize:20, color:'grey'}} />
                                     </View>
                                     <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={this.buttonEnabled} onChangeText={(text)=>this.setState({imageLink:text})} value={imageLink} placeholder="Your Profile Image Link" placeholderTextColor="grey"/></View>
                                 </View>
-                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorEmailFormat || errorEmail ?1:0, borderColor:'red'}}>
+                                <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorAddressFormat || errorAddress ?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                                        <FontAwesome name="envelope" style={{fontSize:20, color:'grey'}} />
+                                        <FontAwesome name="map-marker" style={{fontSize:20, color:'grey'}} />
                                     </View>
-                                    <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={this.buttonEnabled} onChangeText={this.validateEmail} placeholder="Your Email" placeholderTextColor="grey"/></View>
+                                    <View style={{flex:4, justifyContent:'center'}}><TextInput onFocus={this.buttonEnabled} onChangeText={this.validateAddress} placeholder="Your Address" placeholderTextColor="grey"/></View>
                                 </View>
-                                {errorEmailFormat && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>Wrong email.</Text></View>}
-                                {errorEmail && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>Email characters must be more than one.</Text></View>}
+                                {errorAddress && <View style={{width:'90%',flex:1}}><Text style={{color:'red'}}>Address must be more than one.</Text></View>}
                                 <View style={{ flexDirection:'row', alignItems:'center', justifyContent:'center', backgroundColor:'white', elevation:5, borderRadius:30, padding:5, margin:10, borderWidth:errorName?1:0, borderColor:'red'}}>
                                     <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                                         <FontAwesome name="tags" style={{fontSize:20, color:'grey'}} />

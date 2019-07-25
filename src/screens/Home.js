@@ -11,13 +11,16 @@ import {
     FlatList,
     Image,
     ImageBackground,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
+
+const {width,height} = Dimensions.get('window')
 
 const HEADER_MAX_HEIGHT = 100;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 73;
@@ -26,7 +29,6 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 export default class Home extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             scrollY: new Animated.Value(
                 // iOS has negative initial scroll value because content inset...
@@ -350,118 +352,190 @@ export default class Home extends Component {
     }
 
     render() {
-        console.warn(this.state.page);
-        console.warn(this.state.totalPage);
-        // Because of content inset the scroll value will be negative on iOS so bring
-        // it back to 0.
-        const scrollY = Animated.add(
-            this.state.scrollY,
-            Platform.OS === 'ios' ? HEADER_MAX_HEIGHT : 0,
-        );
-        const headerTranslate = scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, -HEADER_SCROLL_DISTANCE],
-            extrapolate: 'clamp',
-        });
 
-        const imageOpacity = scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [1, 1, 0],
-            extrapolate: 'clamp',
-        });
-        const imageTranslate = scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, 100],
-            extrapolate: 'clamp',
-        });
+        if(this.state.role==1){
+            return(
+                <AdminScreen />
+            )
+        }
+        else{
+            // Because of content inset the scroll value will be negative on iOS so bring
+            // it back to 0.
+            const scrollY = Animated.add(
+                this.state.scrollY,
+                Platform.OS === 'ios' ? HEADER_MAX_HEIGHT : 0,
+            );
+            const headerTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, -HEADER_SCROLL_DISTANCE],
+                extrapolate: 'clamp',
+            });
 
-        const titleScale = scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [1, 1, 0.8],
-            extrapolate: 'clamp',
-        });
-        const titleTranslate = scrollY.interpolate({
-            inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, 0, -8],
-            extrapolate: 'clamp',
-        });
+            const imageOpacity = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [1, 1, 0],
+                extrapolate: 'clamp',
+            });
+            const imageTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, 100],
+                extrapolate: 'clamp',
+            });
 
-        return (
-            <View style={styles.fill}>
-                <Animated.ScrollView
-                    style={styles.fill}
-                    scrollEventThrottle={1}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
-                        { useNativeDriver: true },
-                    )}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={() => {
-                                this.setState({ refreshing: true });
-                                setTimeout(() => this.setState({ refreshing: false }), 1000);
-                            }}
-                            // Android offset for RefreshControl
-                            progressViewOffset={HEADER_MAX_HEIGHT}
-                        />
-                    }
-                    // iOS offset for RefreshControl
-                    contentInset={{
-                        top: HEADER_MAX_HEIGHT,
-                    }}
-                    contentOffset={{
-                        y: -HEADER_MAX_HEIGHT,
-                    }}
-                >
-                    {this._renderScrollViewContent()}
-                </Animated.ScrollView>
-                <Animated.View
-                    pointerEvents="none"
-                    style={[
-                        styles.header,
-                        { transform: [{ translateY: headerTranslate }] },
-                    ]}
-                >
-                    <Animated.Image
+            const titleScale = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [1, 1, 0.8],
+                extrapolate: 'clamp',
+            });
+            const titleTranslate = scrollY.interpolate({
+                inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+                outputRange: [0, 0, -8],
+                extrapolate: 'clamp',
+            });
+
+            return (
+                <View style={styles.fill}>
+                    <Animated.ScrollView
+                        style={styles.fill}
+                        scrollEventThrottle={1}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
+                            { useNativeDriver: true },
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => {
+                                    this.setState({ refreshing: true });
+                                    axios.get('http://52.27.82.154:7000/tour')
+                                    .then((response) => {
+                                        this.setState((prevState) => {
+                                            return {
+                                                tour: response.data.data,
+                                                page: response.data.page,
+                                                totalPage: response.data.totalPage,
+                                                refreshing: false
+                                            }
+                                        })
+                                    })
+                                    .catch(error => {
+                                        console.warn(error);
+                                        this.setState({
+                                            refreshing: false
+                                        })
+                                    });
+                                }}
+                                // Android offset for RefreshControl
+                                progressViewOffset={HEADER_MAX_HEIGHT}
+                            />
+                        }
+                        // iOS offset for RefreshControl
+                        contentInset={{
+                            top: HEADER_MAX_HEIGHT,
+                        }}
+                        contentOffset={{
+                            y: -HEADER_MAX_HEIGHT,
+                        }}
+                    >
+                        {this._renderScrollViewContent()}
+                    </Animated.ScrollView>
+                    <Animated.View
+                        pointerEvents="none"
                         style={[
-                            styles.backgroundImage,
+                            styles.header,
+                            { transform: [{ translateY: headerTranslate }] },
+                        ]}
+                    >
+                        <Animated.Image
+                            style={[
+                                styles.backgroundImage,
+                                {
+                                    opacity: imageOpacity,
+                                    transform: [{ translateY: imageTranslate }],
+                                },
+                            ]} />
+                    </Animated.View>
+                    <Animated.View
+                        style={[
+                            styles.bar,
                             {
-                                opacity: imageOpacity,
-                                transform: [{ translateY: imageTranslate }],
+                                transform: [
+                                    { translateY: titleTranslate },
+                                ],
                             },
-                        ]} />
-                </Animated.View>
-                <Animated.View
-                    style={[
-                        styles.bar,
-                        {
-                            transform: [
-                                { translateY: titleTranslate },
-                            ],
-                        },
-                    ]}
-                >
-                    <View style={{ flex: 1, justifyContent: 'center', backgroundColor:'#80c7cd', padding:20}}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1, justifyContent:'center' }}>
-                                <Text style={{ fontSize: 24, color: '#fff' }}>EXtick</Text>
-                            </View>
-                            <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    <TouchableOpacity>
-                                        <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
-                                        <AntDesign name='heart' size={24} color={'#fff'} />
-                                    </TouchableOpacity>
+                        ]}
+                    >
+                        <View style={{ flex: 1, justifyContent: 'center', backgroundColor:'#80c7cd', padding:20}}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, justifyContent:'center' }}>
+                                    <Text style={{ fontSize: 24, color: '#fff' }}>EXtick</Text>
+                                </View>
+                                <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat')}>
+                                            <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
+                                            <AntDesign name='heart' size={24} color={'#fff'} />
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             </View>
                         </View>
-                    </View>
-                </Animated.View>
+                    </Animated.View>
+                </View>
+            );
+        }
+    }
+}
+
+class AdminScreen extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            carouselButton:[
+                {key:0, label:'Upload New Tour', image:''},
+                {key:1, label:'View Recent Tour', image:''},
+                {key:2, label:'History of Ticket Purchase', image:''}
+            ]
+        }
+    }
+    _renderItem({item,index}){
+        return (                
+            <View style={{width:'100%', padding:20}}>
+                <View style={{backgroundColor:'white', padding:20, borderRadius:30, elevation:5, alignItems:'center', justifyContent:'center'}}>
+                    <Image style={{width:100, height:100}} source={require('../../assets/images/7.png')}/>
+                    <Text style={{color:'blue', fontSize:20, fontWeight:'bold'}}>{item.label}</Text>
+                </View>
             </View>
-        );
+        )
+    }
+    render(){
+        return(
+                <LinearGradient style={{flex:1}} start={{x: 0, y: 0}} end={{x: 2, y: 2}} colors={['#60935C','#9effa6']}>
+                    <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                        <Image style={{width:200,height:200}} source={require('../../assets/images/2.png')}/>
+                    </View>
+                    <ImageBackground source={require('../../assets/images/5.png')} style={{flex:2, resizeMode:'stretch', zIndex:1}}/>
+                    {/* <Image source={require('../../assets/images/9.png')} style={{flex:2, resizeMode:'stretch', width:'100%'}}/> */}
+                    <View style={{position:'absolute',marginTop:height/7}}>
+                        <Carousel
+                            ref={ref=>this.carousel = ref}
+                            data={this.state.carouselButton}
+                            sliderWidth={width}
+                            itemWidth={width-(width*40/100)}
+                            renderItem={this._renderItem}
+                            onSnapToItem={
+                                index=>this.setState({activeIndex:index})
+                            }
+                        />
+                        <View style={{backgroundColor:'white', margin:20, padding:20, borderRadius:30, elevation:5, justifyContent:'center'}}>
+                            <Text style={{fontSize:20, fontWeight:'bold', color:'blue', marginBottom:20}}>Lorem Ipsum Dolor Sit amet ?</Text>
+                            <Text style={{textAlign:'justify'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                        </View>
+                    </View>
+                </LinearGradient>
+        )        
     }
 }
 
@@ -477,7 +551,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: '#80c7cd',
+        backgroundColor: '#C9E4BB',
         overflow: 'hidden',
     },
     backgroundImage: {

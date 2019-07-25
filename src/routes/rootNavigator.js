@@ -3,7 +3,8 @@ import { createAppContainer, createStackNavigator, createBottomTabNavigator } fr
 import Home from '../screens/Home';
 import Notification from '../screens/Notification';
 import Search from '../screens/Search';
-import User from '../screens/User';
+import SearchChild from '../screens/SearchChild';
+// import User from '../screens/User';
 import TimeLine from '../screens/TimeLine';
 import AddTour from '../screens/AddTour';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,8 +14,13 @@ import Register from '../screens/Register'
 import ForgotPassword from '../screens/ForgotPassword'
 import MyProfileScreen from '../screens/MyProfileScreen'
 import MyEditProfileScreen from '../screens/MyEditProfileScreen'
+import RedeemPoints from '../screens/RedeemPoints'
 import Chat from '../screens/Chat';
 import Wishlist from '../screens/Wishlist';
+import Payment from '../screens/Payment'
+import Checkout from '../components/Checkout'
+import MyTicket from '../components/MyTicket'
+import DashboardChat from '../screens/DashboardChat';
 
 const bottomTabNavigator = createBottomTabNavigator({
     Home: {
@@ -85,10 +91,38 @@ const appStackNavigator = createStackNavigator({
     },
     Login: {screen:Login},
     Register,
+    ForgotPassword,
     MyEditProfileScreen,
     MyProfileScreen,
-    ForgotPassword,
     Chat,
+    SearchChild,
+    RedeemPoints,
+    // Notification : {
+    //     screen: Notification,
+    //     navigationOptions:({ navigation }) => ({
+    //         headerStyle: {
+    //             backgroundColor: '#64BA5A',
+    //             elevation:0
+    //         },  
+    //         headerTintColor: '#fff',
+    //         title: 'Notification',
+    //     })
+    // },
+    Payment : {
+        screen: Payment,
+    },
+    Checkout : {
+        screen: Checkout,
+    },
+    MyTicket : {
+        screen: MyTicket,
+    },
+    DashboardChat: {
+        screen: DashboardChat,
+        navigationOptions: () => ({
+            header: null,
+        }),
+    },
 })
 
 export default createAppContainer(appStackNavigator);

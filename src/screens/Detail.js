@@ -75,7 +75,9 @@ export default class Detail extends Component {
             token: '',
             isLogin: false,
             idUser: '',
-            idTour: this.props.navigation.state.params.item.id_tour
+            idAdmin: this.props.navigation.state.params.item.id_admin,
+            photo: this.props.navigation.state.params.item.photo,
+            tourName: this.props.navigation.state.params.item.tour
         }
     }
 
@@ -177,7 +179,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: true
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })
@@ -185,7 +187,7 @@ export default class Detail extends Component {
             this.setState({
                 favourite: false
             })
-            axios.post(`http://52.27.82.154:7000/wishlist?id_user=5&id_tour=${this.props.navigation.state.params.item.id_tour}`)
+            axios.post(`http://52.27.82.154:7000/wishlist?id_user=${this.state.idUser}&id_tour=${this.props.navigation.state.params.item.id_tour}`)
             .then((response) => {
                 console.warn(response);
             })
@@ -249,7 +251,13 @@ export default class Detail extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex:1, paddingHorizontal:15, paddingVertical:15, alignItems:'flex-end'}}>
-                        <TouchableOpacity onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.favourite()}>
+                        <TouchableOpacity onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.props.navigation.navigate('Chat', {
+                            idUser: this.state.idUser,
+                            idAdmin: this.state.idAdmin,
+                            photoAdmin: this.state.photo,
+                            token: this.state.token,
+                            tour: this.state.tourName
+                        })}>
                             <Ionicon name='ios-chatbubbles' size={30} color={'#fff'} />
                         </TouchableOpacity>
                     </View>

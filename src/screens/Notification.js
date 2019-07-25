@@ -78,6 +78,7 @@ class Notification extends Component {
     }
 
     render() {
+        console.warn(this.state.token);
         if(this.state.isLogin == false) {
             return (
                 <React.Fragment>

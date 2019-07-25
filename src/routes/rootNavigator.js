@@ -21,6 +21,7 @@ import Payment from '../screens/Payment'
 import Checkout from '../components/Checkout'
 import MyTicket from '../components/MyTicket'
 import DashboardChat from '../screens/DashboardChat';
+import RecentTour from '../screens/RecentTour';
 
 const bottomTabNavigator = createBottomTabNavigator({
     Home: {
@@ -60,47 +61,60 @@ const bottomTabNavigator = createBottomTabNavigator({
                 // You can return any component that you like here!
                 return <IconComponent name={iconName} size={25} color={tintColor} />;
             }
-        })
+        }),
+        tabBarOptions: {
+          activeTintColor: 'white',
+          inactiveTintColor: '#6DA765',
+          style:{
+              backgroundColor:'black'
+          }
+        },
     }
-)
-
-const appStackNavigator = createStackNavigator({
-    Home: {
-        screen: bottomTabNavigator,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    DetailTour: {
-        screen: Detail,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    Wishlist: {
-        screen: Wishlist,
-        navigationOptions: () => ({
-            header: null
-        })
-    },
-    AddTour: {
-        screen: AddTour,
-        navigationOptions: () => ({
-            header: null,
-        }),
-    },
-    Login: {screen:Login},
-    Register,
-    ForgotPassword,
-    MyEditProfileScreen,
-    MyProfileScreen,
-    Chat,
-    SearchChild,
-    RedeemPoints,
+    )
+    
+    const appStackNavigator = createStackNavigator({
+        Home: {
+            screen: bottomTabNavigator,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        DetailTour: {
+            screen: Detail,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        Wishlist: {
+            screen: Wishlist,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        AddTour: {
+            screen: AddTour,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
+        Login: {screen:Login},
+        Register,
+        ForgotPassword,
+        MyProfileScreen,
+        MyEditProfileScreen,
+        Chat,
+        SearchChild,
+        RedeemPoints,
+        RecentTour: {
+            screen: RecentTour,
+            navigationOptions: () => ({
+                header: null,
+            }),
+        },
     // Notification : {
-    //     screen: Notification,
-    //     navigationOptions:({ navigation }) => ({
-    //         headerStyle: {
+        //     screen: Notification,
+        //     navigationOptions:({ navigation }) => ({
+            //         headerStyle: {
     //             backgroundColor: '#64BA5A',
     //             elevation:0
     //         },  
@@ -123,6 +137,9 @@ const appStackNavigator = createStackNavigator({
             header: null,
         }),
     },
+},
+{
+    initialRouteName: 'Home'
 })
 
 export default createAppContainer(appStackNavigator);

@@ -10,16 +10,24 @@ import {
     ActivityIndicator,
     Alert,
     Image,
-    Platform
+    Platform,
+    PermissionsAndroid,
+    AsyncStorage,
+    ToastAndroid,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-picker';
+import NumericInput from 'react-native-numeric-input';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default class extends Component {
 
     constructor(props) {
         super(props);
+
+        this.getUserLocation()
+        this._bootstrapAsync()
 
         this.state = {
             province: [],
@@ -31,8 +39,50 @@ export default class extends Component {
             address: '',
             description: '',
             selectedCategory: '',
-            isLoading: false
+            isLoading: false,
+            price: 0,
+            latitude: 0,
+            longitude: 0,
+            idUser: 0,
+            district: ''
         }
+    }
+    
+    async getUserLocation() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                alert("You can use the location")
+                await navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        this.setState({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        })
+                    },
+                    (error) => {
+                        console.warn('Error ' + error.message)
+                    },
+                    { enableHighAccuracy: true, maximumAge: 1000, timeout: 200000 }
+                )
+            }
+            else {
+                alert("Location permission denied")
+            }
+        }
+        catch (err) {
+            console.warn(err)
+        }
+    }
+
+    async _bootstrapAsync() {
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result})
+            }
+        })
     }
 
     componentDidMount() {
@@ -92,6 +142,10 @@ export default class extends Component {
         })
     }
 
+    changeDistrict = (val) => {
+        this.setState({ district: val })
+    }
+
     addTour = () => {
         this.setState({
             isLoading: true
@@ -105,20 +159,30 @@ export default class extends Component {
         data.append('tour', this.state.tour);
         data.append('addres', this.state.address);
         data.append('description', this.state.description);
-        data.append('latitude', '40.78825');
-        data.append('longitude', '-122.4324');
-        data.append('cost', 20.000);
+        data.append('latitude', this.state.latitude);
+        data.append('longitude', this.state.longitude);
+        data.append('cost', this.state.price);
+        data.append('districts', this.state.district);
         data.append('id_province', this.state.selectedProvince);
         data.append('id_category', this.state.selectedCategory);
+        data.append('id_admin', this.props.navigation.state.params.id);
 
         axios.post('http://52.27.82.154:7000/tour', data)
-        .then((responses) => {
-            console.warn(responses)
+        .then(() => {
             this.setState({ isLoading: false })
+            this.props.navigation.goBack();
+            ToastAndroid.showWithGravity(
+                'Success! Create new tour',
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+            )
         })
         .catch(error => {
-            console.warn(error)
             this.setState({ isLoading: false })
+            Alert.alert(
+                'Uhoh :(',
+                'Check your internet connection'
+            )
         });
     }
 
@@ -141,6 +205,30 @@ export default class extends Component {
                             <TextInput placeholder='Tour name...' style={{borderWidth:1, borderColor:'#5bf41a', padding:10, backgroundColor:'#fff', borderRadius:5}} onChangeText={this.changeTour} />
 
                             <TextInput placeholder='Tour address...' style={{borderWidth:1, borderColor:'#5bf41a', padding:10, backgroundColor:'#fff', borderRadius:5, marginTop:10}} onChangeText={this.changeAddress} />
+
+                            <TextInput placeholder='District...' style={{borderWidth:1, borderColor:'#5bf41a', padding:10, backgroundColor:'#fff', borderRadius:5, marginTop:10}} onChangeText={this.changeDistrict} />
+
+                            <View style={{marginTop:10, flexDirection:'row', alignItems:'center'}}>
+                                <View style={{flex:1}}>
+                                    <Text style={{fontSize: 18, marginBottom:5}}>Price</Text>
+                                    <NumericInput 
+                                            value={this.state.price} 
+                                            onChange={text => {
+                                                this.setState({
+                                                    price: text
+                                                })
+                                            }} 
+                                            totalWidth={wp(60)} 
+                                            totalHeight={40} 
+                                            iconSize={25}
+                                            step={1}
+                                            minValue={1}
+                                            rounded 
+                                            rightButtonBackgroundColor='#41d11f' 
+                                            leftButtonBackgroundColor='#41d11f' 
+                                        />
+                                </View>
+                            </View>
 
                             <TextInput placeholder='Description...' style={{borderWidth:1, borderColor:'#5bf41a', padding:10, marginTop:10, height:150, borderRadius:5}} multiline={true} onChangeText={this.changeDescription} />
                         </View>

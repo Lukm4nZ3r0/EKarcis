@@ -13,7 +13,8 @@ import {
     Image,
     ImageBackground,
     ActivityIndicator,
-    Dimensions
+    Dimensions,
+    ToastAndroid
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -21,7 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import { withNavigationFocus } from "react-navigation";
-import URL from '../public/redux/actions/URL';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 
 const {width,height} = Dimensions.get('window')
 
@@ -104,8 +105,26 @@ class Home extends Component {
             totalPage: 1,
             isLoadingFooter: false,
             favourite: [],
-            role:0
+            role:0,
+            idUser: 0,
+            token: ''
         };
+
+        this._bootstrapAsync();
+    }
+
+    async _bootstrapAsync() {
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result })
+            }
+        })
+
+        await AsyncStorage.getItem('token', (error, result) => {
+            if(result) {
+                this.setState({ token: result })
+            }
+        })
     }
 
     get pagination() {
@@ -190,15 +209,15 @@ class Home extends Component {
                         colors={['#80c7cd','#3297b3']}>
                     <Carousel
                         data={this.state.carouselItems}
-                        sliderWidth={400}
+                        sliderWidth={wp('100%')}
                         onSnapToItem={(index) => this.setState({ activeSlide: index })}
-                        itemWidth={360}
+                        itemWidth={wp(90)}
                         renderItem={({ item }) => {
                             return (
                                 <View style={{ flex: 1, paddingTop: 5 }}>
-                                    <TouchableOpacity style={{ flexDirection: 'row', marginHorizontal: 13, marginTop: -30, marginBottom: 5, justifyContent: 'center', width: 350, height: 300 }}>
+                                    <TouchableOpacity style={{ flexDirection: 'row', marginHorizontal: 13, marginTop: -30, marginBottom: 5, justifyContent: 'center', width: wp(86), height: hp(42) }}>
                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                            <ImageBackground source={{ uri: item.image }} style={{ width: 400, height: 200, justifyContent: 'flex-end', alignItems: 'center' }}>
+                                            <ImageBackground source={{ uri: item.image }} style={{ width: wp(100), height: hp(30), justifyContent: 'flex-end', alignItems: 'center' }}>
                                                 <View style={{ backgroundColor: '#fff', width: '70%', borderRadius: 5, elevation: 5, marginBottom: -20, paddingVertical: 10 }}>
                                                     <View style={{flexDirection:'row'}}>
                                                         <Text style={{ paddingHorizontal: 20, fontSize: 18, color: '#282833' }}>{item.title}</Text>
@@ -251,7 +270,7 @@ class Home extends Component {
                                 renderItem={({ item }) => {
                                     return (
                                         <TouchableOpacity>
-                                            <ImageBackground source={{ uri: item.url }} style={{ height: 70, width: 130, borderRadius: 20 }}>
+                                            <ImageBackground source={{ uri: item.url }} style={{ height: hp(10), width: wp(32), borderRadius: 20 }}>
                                                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
                                                     <Text style={{ color: '#fff', fontSize: 22 }}>{item.name}</Text>
                                                 </View>
@@ -266,7 +285,7 @@ class Home extends Component {
                                     renderItem={({ item }) => {
                                         return (
                                             <TouchableOpacity>
-                                                <ImageBackground source={{ uri: item.url }} style={{ height: 70, width: 130, borderRadius: 20 }}>
+                                                <ImageBackground source={{ uri: item.url }} style={{ height: hp(10), width: wp(32), borderRadius: 20 }}>
                                                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
                                                         <Text style={{ color: '#fff', fontSize: 22 }}>{item.name}</Text>
                                                     </View>
@@ -276,7 +295,7 @@ class Home extends Component {
                                     }} />
                         </View>
                         <TouchableOpacity style={{flex:1, alignItems:'flex-end'}}>
-                            <ImageBackground source={{ uri: this.state.categoryImage[4].url }} style={{ height: 140, width: '100%', borderRadius: 20 }}>
+                            <ImageBackground source={{ uri: this.state.categoryImage[4].url }} style={{ height: hp(20), width: wp(37), borderRadius: 20 }}>
                                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
                                     <Text style={{ color: '#fff', fontSize: 22 }}>{this.state.categoryImage[4].name}</Text>
                                 </View>
@@ -296,14 +315,14 @@ class Home extends Component {
                             style={{marginTop:30}}
                             renderItem={({item}) => {
                                 return (
-                                    <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', elevation:10, alignSelf:'center', borderRadius:8, width:'88%', marginBottom:50}} onPress={() => this.props.navigation.navigate('DetailTour', {item})}>
-                                        <Image source={{uri:item.photo}} style={{height:100, width:100, marginTop:-15, marginLeft:-15, borderRadius:8}} />
+                                    <TouchableOpacity style={{flexDirection:'row', backgroundColor:'#fff', elevation:10, alignSelf:'center', borderRadius:8, width:wp(83), marginBottom:50}} onPress={() => this.props.navigation.navigate('DetailTour', {item})}>
+                                        <Image source={{uri:item.photo}} style={{height:hp(15), width:wp(27), marginTop:-15, marginLeft:-15, borderRadius:8}} />
                                         <View style={{flex:1}}>
                                         <View style={{paddingHorizontal:10, paddingVertical:5}}>
                                             <View style={{flexDirection:'row'}}>
                                                 <View style={{flex:1}}>
                                                     <View style={{flexDirection:'row'}}>
-                                                        <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}}>{item.tour}</Text>
+                                                        <Text style={{fontSize:18, fontFamily:'sans-serif-medium', color:'#282833'}} numberOfLines={1}>{item.tour}</Text>
                                                     </View>
                                                 </View>
                                             </View>
@@ -336,6 +355,12 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        this.getRole = AsyncStorage.getItem('role').then((role)=>{
+            console.warn('ini role dari Home.js ',role)
+            this.setState({
+                role:Number(role)
+            })
+        })
         axios.get(`http://52.27.82.154:7000/category`)
             .then((response) => {
                 this.setState({ category: response.data })
@@ -367,10 +392,9 @@ class Home extends Component {
     }
 
     render() {
-
         if(this.state.role==1){
             return(
-                <AdminScreen />
+                <AdminScreen navigation={this.props.navigation} />
             )
         }
         else{
@@ -487,10 +511,21 @@ class Home extends Component {
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat')}>
+                                        <TouchableOpacity onPress={() => this.state.token != '' ? this.props.navigation.navigate('DashboardChat', {
+                                            id: this.state.idUser,
+                                            token: this.state.token
+                                        }) : this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity(
+                                            'Please login first!',
+                                            ToastAndroid.SHORT,
+                                            ToastAndroid.CENTER
+                                        )}>
                                             <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist')}>
+                                        <TouchableOpacity onPress={() => this.state.token != '' ? this.props.navigation.navigate('Wishlist', { id: this.state.idUser }) : this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity(
+                                            'Please login first!',
+                                            ToastAndroid.SHORT,
+                                            ToastAndroid.CENTER
+                                        )}>
                                             <AntDesign name='heart' size={24} color={'#fff'} />
                                         </TouchableOpacity>
                                     </View>
@@ -504,27 +539,52 @@ class Home extends Component {
     }
 }
 
+class CarouselItem extends Component {
+
+    _goNavigate(key) {
+        if(key == 0) {
+            this.props.navigation.navigate('AddTour', { id: this.props.id });
+        }
+
+        if(key == 1) {
+            this.props.navigation.navigate('RecentTour', { id: this.props.id });
+        }
+    }
+
+    render() {
+        return (
+            <View style={{width:'100%', padding:20}}>
+                <TouchableOpacity style={{backgroundColor:'white', padding:20, borderRadius:30, elevation:5, alignItems:'center', justifyContent:'center'}} onPress={() => this._goNavigate(this.props.item.key)}>
+                    <Image style={{width:100, height:100}} source={require('../../assets/images/7.png')}/>
+                    <Text style={{color:'blue', fontSize:20, fontWeight:'bold'}}>{this.props.item.label}</Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+}
+
 class AdminScreen extends Component{
     constructor(props){
         super(props)
+        this._bootstrapAsync()
         this.state = {
             carouselButton:[
                 {key:0, label:'Upload New Tour', image:''},
                 {key:1, label:'View Recent Tour', image:''},
                 {key:2, label:'History of Ticket Purchase', image:''}
-            ]
+            ],
+            idUser: 0
         }
     }
-    _renderItem({item,index}){
-        return (                
-            <View style={{width:'100%', padding:20}}>
-                <View style={{backgroundColor:'white', padding:20, borderRadius:30, elevation:5, alignItems:'center', justifyContent:'center'}}>
-                    <Image style={{width:100, height:100}} source={require('../../assets/images/7.png')}/>
-                    <Text style={{color:'blue', fontSize:20, fontWeight:'bold'}}>{item.label}</Text>
-                </View>
-            </View>
-        )
+
+    async _bootstrapAsync() {
+        await AsyncStorage.getItem('idUser', (error, result) => {
+            if(result) {
+                this.setState({ idUser: result })
+            }
+        })
     }
+
     render(){
         return(
                 <LinearGradient style={{flex:1}} start={{x: 0, y: 0}} end={{x: 2, y: 2}} colors={['#60935C','#9effa6']}>
@@ -539,7 +599,11 @@ class AdminScreen extends Component{
                             data={this.state.carouselButton}
                             sliderWidth={width}
                             itemWidth={width-(width*40/100)}
-                            renderItem={this._renderItem}
+                            renderItem={({item, index}) => {
+                                return (
+                                    <CarouselItem navigation={this.props.navigation} item={item} index={index} id={this.state.idUser} />
+                                )
+                            }}
                             onSnapToItem={
                                 index=>this.setState({activeIndex:index})
                             }

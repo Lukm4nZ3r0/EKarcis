@@ -44,7 +44,7 @@ class Login extends Component {
         }
     }
     passwordValidate = (text) =>{
-        if(text.length<6){
+        if(text.length<7){
             this.setState({errorPassword:true, password:''})
         }
         else{
@@ -79,7 +79,7 @@ class Login extends Component {
             })
         }
         else {
-            this.setState({loginButtonDisabled:true, loginButtonError:tru})
+            this.setState({loginButtonDisabled:true, loginButtonError:true})
         }
     }
     render() {

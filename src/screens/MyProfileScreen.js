@@ -45,7 +45,9 @@ class MyProfileScreen extends Component{
                         console.warn('ini adalah token:'+token)
                         console.warn('ini adalah idUser:'+idUser)
                         console.warn('ini adalah role:'+role)
-                        axios.get(`${URL}/user/${idUser}`).then((profileData)=>{
+                        axios.get(`${URL}/user/${idUser}`,{
+                            headers:{'auth': token}
+                        }).then((profileData)=>{
                             console.warn('profileData:',profileData.data)
                             this.setState({
                                 profileData:profileData.data.result[0]
@@ -63,7 +65,7 @@ class MyProfileScreen extends Component{
                     AsyncStorage.getItem('idUser').then((idUser)=>{
                         this.setState({isLogged:true,userId:idUser})
     
-                        axios.get(`${URL}/user/${idUser}`).then((profileData)=>{
+                        axios.get(`${URL}/user/${idUser}`,{headers:{'auth':token}}).then((profileData)=>{
                             console.warn('profileData:',profileData.data)
                             this.setState({
                                 profileData:profileData.data.result[0]

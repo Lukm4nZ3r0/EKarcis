@@ -118,12 +118,14 @@ class MyEditProfileScreen extends Component {
             fd.append('birthday',birthday)
             fd.append('work',work)
 
-            AsyncStorage.getItem('idUser').then((idUser)=>{
-                axios.patch(`${URL}/auth_register/${idUser}`,fd).then((response)=>{
-                    console.log('ini response dari patch', response)
-                }).catch((err)=>console.log('ini error dari axios',err))
+            AsyncStorage.getItem('token').then((token)=>{
+                AsyncStorage.getItem('idUser').then((idUser)=>{
+                    axios.patch(`${URL}/auth_register/${idUser}`,fd, {headers:{'auth':token}}).then((response)=>{
+                        console.log('ini response dari patch', response)
+                    }).catch((err)=>console.log('ini error dari axios',err))
+                })
+                .catch((error) => console.log(error));
             })
-            .catch((error) => console.log(error));
 
             this.setState({errorForm:false,buttonDisabled:true})
             this.props.navigation.goBack()
@@ -137,17 +139,21 @@ class MyEditProfileScreen extends Component {
     }
     componentDidMount(){
         AsyncStorage.getItem('idUser').then((idUser)=>{
-            axios.get(`${URL}/user/${idUser}`).then((responseData)=>{
-                console.log('dari axios',responseData.data.result[0])
-                const {email,name,phone,address,birthday,gender,work,photo,points} = responseData.data.result[0]
-                this.setState({
-                    address:address,
-                    name:name,
-                    phone:phone.toString(),
-                    work:work,
-                    birthday:birthday,
-                    gender:gender,
-                    imageLink:photo.length==0?'https://i0.wp.com/cultofdigital.com/wp-content/uploads/2018/01/wallpapers-whatsapp-cute-panda.jpg?resize=500%2C887':photo
+            AsyncStorage.getItem('token').then((token)=>{
+                axios.get(`${URL}/user/${idUser}`,{
+                    headers: {'auth': token}
+                }).then((responseData)=>{
+                    console.log('dari axios',responseData.data.result[0])
+                    const {email,name,phone,address,birthday,gender,work,photo,points} = responseData.data.result[0]
+                    this.setState({
+                        address:address,
+                        name:name,
+                        phone:phone.toString(),
+                        work:work,
+                        birthday:birthday,
+                        gender:gender,
+                        imageLink:photo.length==0?'https://i0.wp.com/cultofdigital.com/wp-content/uploads/2018/01/wallpapers-whatsapp-cute-panda.jpg?resize=500%2C887':photo
+                    })
                 })
             })
         })

@@ -12,7 +12,8 @@ import {
     Image,
     Platform,
     PermissionsAndroid,
-    AsyncStorage
+    AsyncStorage,
+    ToastAndroid,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
@@ -42,7 +43,8 @@ export default class extends Component {
             price: 0,
             latitude: 0,
             longitude: 0,
-            idUser: 0
+            idUser: 0,
+            district: ''
         }
     }
     
@@ -141,7 +143,7 @@ export default class extends Component {
     }
 
     changeDistrict = (val) => {
-        this.setState({  })
+        this.setState({ district: val })
     }
 
     addTour = () => {
@@ -160,18 +162,27 @@ export default class extends Component {
         data.append('latitude', this.state.latitude);
         data.append('longitude', this.state.longitude);
         data.append('cost', this.state.price);
+        data.append('districts', this.state.district);
         data.append('id_province', this.state.selectedProvince);
         data.append('id_category', this.state.selectedCategory);
         data.append('id_admin', this.props.navigation.state.params.id);
 
         axios.post('http://52.27.82.154:7000/tour', data)
-        .then((responses) => {
-            console.warn(responses)
+        .then(() => {
             this.setState({ isLoading: false })
+            this.props.navigation.goBack();
+            ToastAndroid.showWithGravity(
+                'Success! Create new tour',
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+            )
         })
         .catch(error => {
-            console.warn(error)
             this.setState({ isLoading: false })
+            Alert.alert(
+                'Uhoh :(',
+                'Check your internet connection'
+            )
         });
     }
 

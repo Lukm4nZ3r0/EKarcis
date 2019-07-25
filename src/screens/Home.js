@@ -510,6 +510,10 @@ class CarouselItem extends Component {
         if(key == 0) {
             this.props.navigation.navigate('AddTour', { id: this.props.id });
         }
+
+        if(key == 1) {
+            this.props.navigation.navigate('RecentTour', { id: this.props.id });
+        }
     }
 
     render() {

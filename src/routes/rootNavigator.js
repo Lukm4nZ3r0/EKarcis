@@ -21,6 +21,7 @@ import Payment from '../screens/Payment'
 import Checkout from '../components/Checkout'
 import MyTicket from '../components/MyTicket'
 import DashboardChat from '../screens/DashboardChat';
+import RecentTour from '../screens/RecentTour';
 
 const bottomTabNavigator = createBottomTabNavigator({
     Home: {
@@ -97,6 +98,12 @@ const appStackNavigator = createStackNavigator({
     Chat,
     SearchChild,
     RedeemPoints,
+    RecentTour: {
+        screen: RecentTour,
+        navigationOptions: () => ({
+            header: null,
+        }),
+    },
     // Notification : {
     //     screen: Notification,
     //     navigationOptions:({ navigation }) => ({

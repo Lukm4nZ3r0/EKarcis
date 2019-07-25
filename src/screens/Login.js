@@ -62,7 +62,8 @@ class Login extends Component {
         if(email.length>0 && password.length>0) {
             axios.post(`${URL}/auth_login`,querystring.stringify({
                 email:email,
-                password:password
+                password:password,
+                device_id:'abcdefg'
             })).then((response)=>{
                 console.warn(response.data.result[0])
                 this.setState({loginButtonDisabled:true, email:'', password:'',loginButtonError:false})

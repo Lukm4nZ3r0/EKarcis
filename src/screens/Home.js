@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     Animated,
+    AsyncStorage,
     Platform,
     StatusBar,
     StyleSheet,
@@ -19,6 +20,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
+import { withNavigationFocus } from "react-navigation";
 
 const {width,height} = Dimensions.get('window')
 
@@ -100,7 +102,8 @@ export default class Home extends Component {
             page: 1,
             totalPage: 1,
             isLoadingFooter: false,
-            favourite: []
+            favourite: [],
+            role:0
         };
     }
 
@@ -332,13 +335,19 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://52.27.82.154:7000/category')
+        this.getRole = AsyncStorage.getItem('role').then((role)=>{
+            console.warn('ini role dari Home.js ',role)
+            this.setState({
+                role:Number(role)
+            })
+        })
+        axios.get(`${URL}/category`)
             .then((response) => {
                 this.setState({ category: response.data })
             })
             .catch(error => console.warn(error));
 
-        axios.get('http://52.27.82.154:7000/tour')
+        axios.get(`${URL}/tour`)
             .then((response) => {
                 this.setState((prevState) => {
                     return {
@@ -349,6 +358,11 @@ export default class Home extends Component {
                 })
             })
             .catch(error => console.warn(error));
+    }
+
+    componentDidUpdate(prevProps){
+        if (prevProps.isFocused !== this.props.isFocused) {
+        }
     }
 
     render() {

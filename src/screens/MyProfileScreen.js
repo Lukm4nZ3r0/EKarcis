@@ -24,6 +24,7 @@ class MyProfileScreen extends Component{
     loginEvent = (dataLogin) =>{
         AsyncStorage.setItem('token',dataLogin.token)
         AsyncStorage.setItem('idUser',dataLogin.id_user.toString())
+        AsyncStorage.setItem('role',dataLogin.role.toString())
         this.setState({isLogged:true, userData:dataLogin})
     }
     logoutEvent = () =>{
@@ -35,8 +36,11 @@ class MyProfileScreen extends Component{
             if(token!=null){
                 AsyncStorage.getItem('idUser').then((idUser)=>{
                     this.setState({isLogged:true,userId:idUser})
-                    console.warn('ini adalah token:'+token)
-                    console.warn('ini adalah idUser:'+idUser)
+                    AsyncStorage.getItem('role').then((role)=>{
+                        console.warn('ini adalah token:'+token)
+                        console.warn('ini adalah idUser:'+idUser)
+                        console.warn('ini adalah role:'+role)
+                    })
                 })
             }
         })

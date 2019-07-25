@@ -83,7 +83,7 @@ class Register extends Component {
                 name:name,
                 gender:gender
             })).then((response)=>{
-                if(response.data.status===202){
+                if(response.data.status){
                     this.setState({emailExist:false})
                     Alert.alert('Account created succesfully, please Login')
                     this.props.navigation.goBack()

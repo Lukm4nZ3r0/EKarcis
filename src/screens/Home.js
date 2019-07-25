@@ -237,7 +237,7 @@ export default class Home extends Component {
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                        <View style={{flex:1.9}}>
+                        <View style={{flex:1.7}}>
                             <FlatList
                                 data={this.state.categoryImage.slice(0, 2)}
                                 horizontal={true}
@@ -270,7 +270,7 @@ export default class Home extends Component {
                                     }} />
                         </View>
                         <TouchableOpacity style={{flex:1, alignItems:'flex-end'}}>
-                            <ImageBackground source={{ uri: this.state.categoryImage[4].url }} style={{ height: 140, width: 153, borderRadius: 20 }}>
+                            <ImageBackground source={{ uri: this.state.categoryImage[4].url }} style={{ height: 140, width: '100%', borderRadius: 20 }}>
                                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.090)' }}>
                                     <Text style={{ color: '#fff', fontSize: 22 }}>{this.state.categoryImage[4].name}</Text>
                                 </View>
@@ -445,7 +445,7 @@ export default class Home extends Component {
                     <View style={{ flex: 1, justifyContent: 'center', backgroundColor:'#80c7cd', padding:20}}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 1, justifyContent:'center' }}>
-                                <Text style={{ fontSize: 24, color: '#fff' }}>Logo</Text>
+                                <Text style={{ fontSize: 24, color: '#fff' }}>EXtick</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>

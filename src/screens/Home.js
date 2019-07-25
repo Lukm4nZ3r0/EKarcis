@@ -14,6 +14,7 @@ import {
     ImageBackground,
     ActivityIndicator,
     Dimensions,
+    ToastAndroid
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -510,13 +511,21 @@ class Home extends Component {
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat', {
+                                        <TouchableOpacity onPress={() => this.state.token != '' ? this.props.navigation.navigate('DashboardChat', {
                                             id: this.state.idUser,
                                             token: this.state.token
-                                        })}>
+                                        }) : this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity(
+                                            'Please login first!',
+                                            ToastAndroid.SHORT,
+                                            ToastAndroid.CENTER
+                                        )}>
                                             <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist', { id: this.state.idUser })}>
+                                        <TouchableOpacity onPress={() => this.state.token != '' ? this.props.navigation.navigate('Wishlist', { id: this.state.idUser }) : this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity(
+                                            'Please login first!',
+                                            ToastAndroid.SHORT,
+                                            ToastAndroid.CENTER
+                                        )}>
                                             <AntDesign name='heart' size={24} color={'#fff'} />
                                         </TouchableOpacity>
                                     </View>

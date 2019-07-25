@@ -69,7 +69,6 @@ export default class Paid extends Component {
             }
         })
         .catch(error => {
-            alert(error)
             this.setState({ loading: false, isEmpty: true });
         });
     }

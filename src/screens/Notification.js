@@ -63,9 +63,8 @@ class Notification extends Component {
                 this.setState({ idUser: result })
             }
         })
-        axios.get(`http://52.27.82.154:7000/get_data_transaction?id_user=${98}&status=${'unpaid'}`)
+        axios.get(`http://52.27.82.154:7000/get_data_transaction?id_user=${this.state.idUser}&status=${'unpaid'}`)
         .then((res) => {
-            console.warn(res.data.data)
             let data = res.data.data;
             if (data.length <= 0) {
                 console.warn('ini res2', data)

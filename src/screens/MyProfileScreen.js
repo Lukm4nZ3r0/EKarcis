@@ -17,7 +17,10 @@ class MyProfileScreen extends Component{
             isLogged:false,
             userId:'',
             userData:[],
-            profileData:[]
+            profileData:[],
+            role: 0,
+            token: '',
+            id: 0
         }
     }
     static navigationOptions = ({navigation}) =>{
@@ -31,8 +34,8 @@ class MyProfileScreen extends Component{
         AsyncStorage.setItem('role',dataLogin.role.toString())
         this.setState({isLogged:true, userData:dataLogin})
     }
-    logoutEvent = () =>{
-        AsyncStorage.clear()
+    logoutEvent = async () =>{
+        await AsyncStorage.multiRemove(['token', 'idUser', 'role'])
         this.setState({isLogged:false})
     }
     componentDidMount(){
@@ -42,9 +45,7 @@ class MyProfileScreen extends Component{
                     this.setState({isLogged:true,userId:idUser})
 
                     AsyncStorage.getItem('role').then((role)=>{
-                        console.warn('ini adalah token:'+token)
-                        console.warn('ini adalah idUser:'+idUser)
-                        console.warn('ini adalah role:'+role)
+                        this.setState({ role: role, token: token, id: idUser })
                         axios.get(`${URL}/user/${idUser}`,{
                             headers:{'auth': token}
                         }).then((profileData)=>{
@@ -82,7 +83,10 @@ class MyProfileScreen extends Component{
         }
     }
     render(){
-        const {isLogged} = this.state
+        console.warn(this.state.token);
+        console.warn(this.state.role);
+        console.warn(this.state.id);
+        const {isLogged, role} = this.state
         return(
             <View style={{flex:1}}>
                 {/* <LinearGradient style={{flex:1}} start={{x: 0, y: 0}} end={{x: 2, y: 2}} colors={['#60935C','#9effa6']}/> */}
@@ -94,6 +98,17 @@ class MyProfileScreen extends Component{
                             <View style={{alignItems:'center', justifyContent:'center', width:45, height:45, borderRadius:30, backgroundColor:'#F0F0F0'}}><FontAwesome name="credit-card" style={{fontSize:20,color:'#353535'}}/></View>
                             <View style={{flex:5, justifyContent:'center', marginLeft:20}}><Text style={{fontSize:20}}>Redeem Your Points</Text></View>
                         </TouchableOpacity>
+                        {
+                            role !== 0 ? 
+                        
+                            <TouchableOpacity style={{flexDirection:'row',justifyContent:'center', padding:15, elevation:5, backgroundColor:'white', borderWidth:0.1, borderColor:'grey'}} onPress={()=>this.props.navigation.navigate('DashboardChat', {
+                                id: this.state.id,
+                                token: this.state.token
+                            } )}>
+                                <View style={{alignItems:'center', justifyContent:'center', width:45, height:45, borderRadius:30, backgroundColor:'#F0F0F0'}}><FontAwesome name="comments" style={{fontSize:20,color:'#353535'}}/></View>
+                                <View style={{flex:5, justifyContent:'center', marginLeft:20}}><Text style={{fontSize:20}}>Message</Text></View>
+                            </TouchableOpacity> : null 
+                        }
                         <TouchableOpacity style={{flexDirection:'row',justifyContent:'center', padding:15, elevation:5, backgroundColor:'white', borderWidth:0.1, borderColor:'grey'}} onPress={()=>this.props.navigation.navigate('MyEditProfileScreen')}>
                             <View style={{alignItems:'center', justifyContent:'center', width:45, height:45, borderRadius:30, backgroundColor:'#F0F0F0'}}><FontAwesome name="pencil" style={{fontSize:20,color:'#353535'}}/></View>
                             <View style={{flex:5, justifyContent:'center', marginLeft:20}}><Text style={{fontSize:20}}>Edit Your Profile</Text></View>

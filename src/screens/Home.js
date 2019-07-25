@@ -105,7 +105,8 @@ class Home extends Component {
             isLoadingFooter: false,
             favourite: [],
             role:0,
-            idUser: 0
+            idUser: 0,
+            token: ''
         };
 
         this._bootstrapAsync();
@@ -115,6 +116,12 @@ class Home extends Component {
         await AsyncStorage.getItem('idUser', (error, result) => {
             if(result) {
                 this.setState({ idUser: result })
+            }
+        })
+
+        await AsyncStorage.getItem('token', (error, result) => {
+            if(result) {
+                this.setState({ token: result })
             }
         })
     }
@@ -503,7 +510,10 @@ class Home extends Component {
                                 </View>
                                 <View style={{ flex: 1, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat')}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('DashboardChat', {
+                                            id: this.state.idUser,
+                                            token: this.state.token
+                                        })}>
                                             <Ionicons name='ios-chatbubbles' size={26} color={'#fff'} style={{ marginRight: 20 }} />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Wishlist', { id: this.state.idUser })}>

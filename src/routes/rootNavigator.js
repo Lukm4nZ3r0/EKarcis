@@ -137,6 +137,9 @@ const bottomTabNavigator = createBottomTabNavigator({
             header: null,
         }),
     },
+},
+{
+    initialRouteName: 'Home'
 })
 
 export default createAppContainer(appStackNavigator);

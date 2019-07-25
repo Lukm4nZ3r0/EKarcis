@@ -75,7 +75,9 @@ export default class Detail extends Component {
             token: '',
             isLogin: false,
             idUser: '',
-            idAdmin: this.props.navigation.state.params.item.id_admin
+            idAdmin: this.props.navigation.state.params.item.id_admin,
+            photo: this.props.navigation.state.params.item.photo,
+            tourName: this.props.navigation.state.params.item.tour
         }
     }
 
@@ -251,7 +253,10 @@ export default class Detail extends Component {
                     <View style={{flex:1, paddingHorizontal:15, paddingVertical:15, alignItems:'flex-end'}}>
                         <TouchableOpacity onPress={() => this.state.isLogin == false ? this.props.navigation.navigate('Login') & ToastAndroid.showWithGravity('Please login first!', ToastAndroid.SHORT, ToastAndroid.CENTER) : this.props.navigation.navigate('Chat', {
                             idUser: this.state.idUser,
-                            idAdmin: this.state.idAdmin
+                            idAdmin: this.state.idAdmin,
+                            photoAdmin: this.state.photo,
+                            token: this.state.token,
+                            tour: this.state.tourName
                         })}>
                             <Ionicon name='ios-chatbubbles' size={30} color={'#fff'} />
                         </TouchableOpacity>

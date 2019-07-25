@@ -28,7 +28,7 @@ const HEADER_MAX_HEIGHT = 100;
 const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 60 : 73;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-export default class Home extends Component {
+class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -335,12 +335,6 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        this.getRole = AsyncStorage.getItem('role').then((role)=>{
-            console.warn('ini role dari Home.js ',role)
-            this.setState({
-                role:Number(role)
-            })
-        })
         axios.get(`${URL}/category`)
             .then((response) => {
                 this.setState({ category: response.data })
@@ -362,6 +356,14 @@ export default class Home extends Component {
 
     componentDidUpdate(prevProps){
         if (prevProps.isFocused !== this.props.isFocused) {
+            this.getRole = AsyncStorage.getItem('role').then((role)=>{
+                if(role !== null){
+                    console.warn('ini role dari Home.js ',role)
+                    this.setState({
+                        role:Number(role)
+                    })
+                }
+            })
         }
     }
 
@@ -584,3 +586,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 });
+
+export default withNavigationFocus(Home)

@@ -140,4 +140,8 @@ Contributions are what make the open source community such an amazing place to b
 * Rion Ming Arfin - [Github](https://github.com/rionmingarfin/)
 * Yoga Setiawan - [Github](https://github.com/arioki1)
 
-
+## Credits
+<a href="http://www.freepik.com">Designed by rawpixel.com / Freepik</a>
+<a href="http://www.freepik.com">Designed by Freepik</a>
+<a href="http://www.freepik.com">Designed by pikisuperstar / Freepik</a>
+<a href="http://www.freepik.com">Designed by katemangostar / Freepik</a>

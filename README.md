@@ -27,7 +27,7 @@
 [![Redux.js](https://img.shields.io/badge/Redux.js-4.0.1-purple.svg?style=rounded-square)](https://redux.js.org/)
 
 
-Here is our E-Commerce Project which builded with React Native Framework for making the User Interface in JavaScript syntax and ExpressJS Framework for making the backend side RESTful API.
+Here is our E-Ticketing Project which builded with React Native Framework for making the User Interface in JavaScript syntax and ExpressJS Framework for making the backend side RESTful API.
 
 Features:
 * Authentication with JWT

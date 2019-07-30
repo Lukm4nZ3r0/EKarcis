@@ -31,7 +31,7 @@ Here is our E-Ticketing Project which builded with React Native Framework for ma
 
 Features:
 * Authentication with JWT
-* Image Upload For Tours
+* Image Upload for Tours
 * Advertise your Tour
 * Buy ticket
 * Check Out

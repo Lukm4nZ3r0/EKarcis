@@ -18,7 +18,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-[![React Native](https://img.shields.io/badge/React%20Native-0.60-blue.svg?style=rounded-square)](https://facebook.github.io/react-native/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.59-blue.svg?style=rounded-square)](https://facebook.github.io/react-native/)
 [![Node.js](https://img.shields.io/badge/Node.js-v.10.16-green.svg?style=rounded-square)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v.4.17.1-grey.svg?style=rounded-square)](https://expressjs.com/)
 [![JsonWebToken.js](https://img.shields.io/badge/JsonWebToken.js-v.8.5.1-orange.svg?style=rounded-square)](https://www.npmjs.com/package/jsonwebtoken)

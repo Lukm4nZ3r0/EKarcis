@@ -37,7 +37,7 @@ Features:
 * Check Out
 * Transactions History
 * Push Notification
-* Transaction with ipaymu API (https://ipaymu.com/)
+* Transaction with [Ipaymu API](https://ipaymu.com/)
 
 
 ### Built With
